@@ -25,6 +25,8 @@ vim.o.expandtab = true
 vim.o.shiftwidth = 2
 vim.o.tabstop = 2
 vim.o.fileformat = 'unix'
+vim.o.number = true
+vim.o.relativenumber = true
 
 -- Setup lazy.nvim
 require("lazy").setup({
