@@ -28,6 +28,8 @@ vim.o.fileformat = 'unix'
 vim.o.number = true
 vim.o.relativenumber = true
 
+vim.keymap.set({ "n", "v" }, "<C-n>", "<cmd>nohl<cr>")
+
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
@@ -36,7 +38,14 @@ require("lazy").setup({
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
-  install = { colorscheme = { "habamax" } },
+  install = { colorscheme = { "tokyonight", "habamax" } },
   -- automatically check for plugin updates
   -- checker = { enabled = true },
 })
+
+-- Set color scheme
+vim.cmd([[
+  colorscheme tokyonight-night
+]])
+
+vim.api.nvim_set_hl(0, "Comment", { fg="#909090" })

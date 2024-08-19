@@ -62,9 +62,9 @@ return {
         { name = "nvim_lsp" },
         { name = "path" },
         { name = "git" },
+        { name = "lazydev", group_index = 0 },
       }, {
         { name = "buffer" },
-        { name = "lazydev", group_index = 0 },
       }),
       experimental = {
         ghost_text = {
