@@ -14,6 +14,11 @@ return {
       dependencies = { "rafamadriz/friendly-snippets" },
     },
     { "petertriho/cmp-git", opts = {} },
+    {
+      "mason.nvim",
+      opts = { ensure_installed = { "sqlfluff" } },
+    },
+    { "williamboman/mason-lspconfig.nvim", config = function() end },
   },
   -- Not all LSP servers add brackets when completing a function.
   -- To better deal with this, LazyVim adds a custom option to cmp,
@@ -53,13 +58,13 @@ return {
         end,
       }),
       sources = cmp.config.sources({
-        { name = "lazydev", group_index = 0 },
         { name = "luasnip" },
         { name = "nvim_lsp" },
         { name = "path" },
         { name = "git" },
       }, {
         { name = "buffer" },
+        { name = "lazydev", group_index = 0 },
       }),
       experimental = {
         ghost_text = {
