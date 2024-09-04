@@ -17,6 +17,11 @@ return {
         desc = "Telescope Find",
         icon = {},
       },
+      {
+        "<leader>o",
+        desc = "Obsidian",
+        icon = {},
+      },
     },
   },
   keys = {

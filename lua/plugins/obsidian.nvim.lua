@@ -17,6 +17,38 @@ return {
 
     -- see below for full list of optional dependencies 👇
   },
+  keys = function ()
+    return {
+      -- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
+      {
+        "<leader>of",
+        function()
+          return require("obsidian").util.gf_passthrough()
+        end,
+        desc = "Jump link",
+        noremap = false,
+        expr = true,
+        buffer = true,
+      },
+      -- Toggle check-boxes.
+      {
+        "<leader>oc",
+        function()
+          return require("obsidian").util.toggle_checkbox()
+        end,
+        buffer = true,
+      },
+      -- Smart action depending on context, either follow link or toggle checkbox.
+      {
+        "<leader>oo",
+        function()
+          return require("obsidian").util.smart_action()
+        end,
+        buffer = true,
+        expr = true,
+      }
+    }
+  end,
   opts = function ()
     vim.o.conceallevel = 1
 
