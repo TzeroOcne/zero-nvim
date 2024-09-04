@@ -45,6 +45,14 @@ require("lazy").setup({
   -- checker = { enabled = true },
 })
 
+-- Restore cursor to bar blink when exit
+vim.cmd([[
+augroup RestoreCursorShapeOnExit
+    autocmd!
+    autocmd VimLeave * set guicursor=a:ver30-iCursor-blinkwait300-blinkon200-blinkoff150
+augroup END
+]])
+
 -- Set color scheme
 vim.cmd([[
   colorscheme tokyonight-night
