@@ -32,6 +32,9 @@ vim.keymap.set({ "n", "v" }, "<C-n>", "<cmd>nohl<cr>")
 vim.keymap.set({ "n", "v" }, "gcd", vim.lsp.buf.definition)
 vim.keymap.set({ "n", "v" }, "gcr", vim.lsp.buf.references)
 
+vim.keymap.set({ "n", "v" }, "<leader>cr", vim.lsp.buf.rename, { desc = 'LSP Rename' })
+
+
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
