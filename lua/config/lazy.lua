@@ -27,6 +27,7 @@ vim.o.tabstop = 2
 vim.o.fileformat = 'unix'
 vim.o.number = true
 vim.o.relativenumber = true
+vim.o.signcolumn = 'yes'
 
 vim.keymap.set({ "n", "v" }, "<C-n>", "<cmd>nohl<cr>")
 vim.keymap.set({ "n", "v" }, "gcd", vim.lsp.buf.definition)
