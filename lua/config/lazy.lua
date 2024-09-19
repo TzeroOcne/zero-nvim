@@ -63,6 +63,7 @@ vim.cmd([[
 ]])
 
 vim.api.nvim_set_hl(0, "Comment", { fg="#909090" })
+vim.api.nvim_set_hl(0, "DiagnosticUnnecessary", { fg="#909090" })
 vim.api.nvim_set_hl(0, 'LineNrAbove', { fg='#009090', bold=true })
 vim.api.nvim_set_hl(0, 'LineNrBelow', { fg='#009090', bold=true })
 vim.api.nvim_set_hl(0, 'LineNr', { fg='Cyan' })
