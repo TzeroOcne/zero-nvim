@@ -22,6 +22,11 @@ return {
         desc = "Obsidian",
         icon = {},
       },
+      {
+        "<leader>l",
+        desc = "LSP",
+        icon = {},
+      },
     },
   },
   keys = {
