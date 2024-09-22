@@ -146,9 +146,9 @@ return {
         comparators = {
           compare.offset,
           compare.exact,
+          compare.score,
           compare_kind,
           -- compare.scopes,
-          compare.score,
           compare.recently_used,
           compare.locality,
           -- compare.kind,
