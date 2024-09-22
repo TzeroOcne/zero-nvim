@@ -11,3 +11,5 @@ vim.keymap.set({ "n", "v" }, "<leader>bd", zero.bufremove, { desc = 'Remove buff
 
 -- Terminal key
 vim.keymap.set({ 't' }, '<esc><esc>', '<C-\\><C-n>', { noremap = true, silent = true, desc = 'Enter normal mode' })
+vim.keymap.set({ "n", "v" }, "<C-_>", zero.terminal, { noremap = true, silent = true, desc = 'Toggle terminal' })
+vim.keymap.set({ 't' }, "<C-_>", '<cmd>close<cr>', { noremap = true, silent = true, desc = 'Toggle terminal' })

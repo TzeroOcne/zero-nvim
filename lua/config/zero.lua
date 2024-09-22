@@ -1,5 +1,10 @@
 local M = {}
 
+local lazy_util = require('lazy.util')
+
+---@type table<string, LazyFloat>
+local terminals = {}
+
 ---@param buf number?
 function M.bufremove(buf)
   buf = buf or 0
@@ -41,6 +46,30 @@ function M.bufremove(buf)
   if vim.api.nvim_buf_is_valid(buf) then
     pcall(vim.cmd, "bdelete! " .. buf)
   end
+end
+
+function M.terminal ()
+  if terminals['zsh'] and terminals['zsh']:buf_valid() then
+    terminals['zsh']:toggle()
+  else
+    terminals['zsh'] = lazy_util.float_term('zsh', {
+      ft = 'lazyterm',
+      size = { width = 0.9, height = 0.9 },
+      persistent = true,
+    })
+    local buf = terminals['zsh'].buf
+
+    vim.api.nvim_create_autocmd("BufEnter", {
+      buffer = buf,
+      callback = function()
+        vim.cmd.startinsert()
+      end,
+    })
+
+    vim.cmd('noh')
+  end
+
+  return terminals['zsh']
 end
 
 return M
