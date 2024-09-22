@@ -13,6 +13,11 @@ return {
     spec = {
       mode = { "n", "v" },
       {
+        "<leader>b",
+        desc = "Buffer",
+        icon = {},
+      },
+      {
         "<leader>f",
         desc = "Telescope Find",
         icon = {},

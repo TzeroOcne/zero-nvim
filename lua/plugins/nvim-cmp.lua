@@ -1,3 +1,29 @@
+local types = require('cmp.types')
+local compare = require('cmp.config.compare');
+
+local kind_priority_map = {
+  [types.lsp.CompletionItemKind.Field] = -2,
+  [types.lsp.CompletionItemKind.Snippet] = -1,
+  [types.lsp.CompletionItemKind.Text] = 100,
+}
+
+---@type cmp.ComparatorFunction
+local function compare_kind(entry1, entry2)
+  local kind1 = entry1:get_kind() --- @type lsp.CompletionItemKind | number
+  local kind2 = entry2:get_kind() --- @type lsp.CompletionItemKind | number
+  kind1 = kind_priority_map[kind1] or kind1
+  kind2 = kind_priority_map[kind2] or kind2
+  if kind1 ~= kind2 then
+    local diff = kind1 - kind2
+    if diff < 0 then
+      return true
+    elseif diff > 0 then
+      return false
+    end
+  end
+  return nil
+end
+
 return {
   "hrsh7th/nvim-cmp",
   version = false, -- last release is way too old
@@ -114,7 +140,23 @@ return {
           hl_group = "CmpGhostText",
         },
       },
-      sorting = defaults.sorting,
+      ---@type cmp.SortingConfig
+      sorting = {
+        priority_weight = 2,
+        comparators = {
+          compare.offset,
+          compare.exact,
+          compare_kind,
+          -- compare.scopes,
+          compare.score,
+          compare.recently_used,
+          compare.locality,
+          -- compare.kind,
+          -- compare.sort_text,
+          compare.length,
+          compare.order,
+        },
+      },
     }
   end,
 }

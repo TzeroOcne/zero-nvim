@@ -29,13 +29,6 @@ vim.o.number = true
 vim.o.relativenumber = true
 vim.o.signcolumn = 'yes'
 
-vim.keymap.set({ "n", "v" }, "<C-n>", "<cmd>nohl<cr>")
-vim.keymap.set({ "n", "v" }, "<leader>ld", vim.lsp.buf.definition, { desc = "Go to lsp definition" })
-vim.keymap.set({ "n", "v" }, "<leader>lr", vim.lsp.buf.references, { desc = "Go to lsp references" })
-
-vim.keymap.set({ "n", "v" }, "<leader>cr", vim.lsp.buf.rename, { desc = 'LSP Rename' })
-
-
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
@@ -48,6 +41,8 @@ require("lazy").setup({
   -- automatically check for plugin updates
   -- checker = { enabled = true },
 })
+
+require('config.keymaps')
 
 -- Restore cursor to bar blink when exit
 vim.cmd([[
@@ -68,4 +63,5 @@ vim.api.nvim_set_hl(0, 'LineNrAbove', { fg='#009090', bold=true })
 vim.api.nvim_set_hl(0, 'LineNrBelow', { fg='#009090', bold=true })
 vim.api.nvim_set_hl(0, 'LineNr', { fg='Cyan' })
 vim.api.nvim_set_hl(0, 'NeoTreeNormal', { bg ='none' })
+vim.api.nvim_set_hl(0, 'NeoTreeNormalNC', { bg ='none' })
 vim.api.nvim_set_hl(0, 'NeoTreeCursorLine', { link = 'none', bg ='none' })
