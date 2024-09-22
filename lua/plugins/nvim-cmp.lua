@@ -49,6 +49,18 @@ return {
     local auto_select = true
     return {
       auto_brackets = {}, -- configure any filetype to auto add brackets
+      formatting = {
+        ---@param vim_item vim.CompletedItem
+        format = function(entry, vim_item)
+          vim_item.dup = nil
+          vim_item.menu = ({
+            nvim_lsp = '[L]',
+            path     = '[F]',
+            buffer   = '[B]',
+          })[entry.source.name]
+          return vim_item
+        end
+      },
       completion = {
         completeopt = "menu,menuone,noinsert" .. (auto_select and "" or ",noselect"),
       },
