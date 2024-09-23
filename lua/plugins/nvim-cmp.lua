@@ -125,6 +125,13 @@ return {
             fallback()
           end
         end, { "i", "s" }),
+        ["<M-m>"] = cmp.mapping(function()
+          if cmp.visible_docs() then
+            cmp.close_docs()
+          else
+            cmp.open_docs()
+          end
+        end, { "i" }),
       }),
       sources = cmp.config.sources({
         { name = "luasnip" },
