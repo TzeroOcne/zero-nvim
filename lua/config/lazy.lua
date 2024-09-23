@@ -28,6 +28,8 @@ vim.o.fileformat = 'unix'
 vim.o.number = true
 vim.o.relativenumber = true
 vim.o.signcolumn = 'yes'
+vim.o.splitright = true
+vim.o.splitbelow = true
 
 -- Setup lazy.nvim
 require("lazy").setup({
