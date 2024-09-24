@@ -135,6 +135,7 @@ return {
       }),
       sources = cmp.config.sources({
         { name = "luasnip" },
+        { name = "snippets" },
         { name = "nvim_lsp" },
         { name = "path" },
         { name = "git" },

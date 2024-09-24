@@ -1,0 +1,9 @@
+{
+  "Insert Iframe": {
+    "prefix": ["ifr", "iframe"],
+    "body": [
+      "<iframe src=\"$1\" width=800 height=600></iframe>"
+    ],
+    "description": "Insert iframe in markdown file"
+  }
+}
