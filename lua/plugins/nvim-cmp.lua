@@ -1,28 +1,5 @@
-local types = require('cmp.types')
+local zero_compare = require('zero.cmp.compare')
 local compare = require('cmp.config.compare');
-
-local kind_priority_map = {
-  [types.lsp.CompletionItemKind.Field] = -2,
-  [types.lsp.CompletionItemKind.Snippet] = -1,
-  [types.lsp.CompletionItemKind.Text] = 100,
-}
-
----@type cmp.ComparatorFunction
-local function compare_kind(entry1, entry2)
-  local kind1 = entry1:get_kind() --- @type lsp.CompletionItemKind | number
-  local kind2 = entry2:get_kind() --- @type lsp.CompletionItemKind | number
-  kind1 = kind_priority_map[kind1] or kind1
-  kind2 = kind_priority_map[kind2] or kind2
-  if kind1 ~= kind2 then
-    local diff = kind1 - kind2
-    if diff < 0 then
-      return true
-    elseif diff > 0 then
-      return false
-    end
-  end
-  return nil
-end
 
 return {
   "hrsh7th/nvim-cmp",
@@ -71,7 +48,6 @@ return {
       end,
     }
     local cmp = require("cmp")
-    local defaults = require("cmp.config.default")()
     local auto_select = true
     return {
       auto_brackets = {}, -- configure any filetype to auto add brackets
@@ -152,10 +128,12 @@ return {
       sorting = {
         priority_weight = 2,
         comparators = {
-          compare.offset,
+          -- compare_kind,
+          -- compare.offset,
           compare.exact,
-          compare.score,
-          compare_kind,
+          -- compare.score,
+          zero_compare.compare_pos_score,
+          zero_compare.compare_kind,
           -- compare.scopes,
           compare.recently_used,
           compare.locality,
