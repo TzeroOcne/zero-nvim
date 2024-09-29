@@ -16,58 +16,47 @@ function M.get_entry_replace_string(entry)
 end
 
 ---comment
----@param start string
----@param entry string
----@return integer[]
-function M.calculate_pos_score(start, entry)
-  ---@type integer[]
-  local positions = {}
-  local last_pos = 0
-
-  for i = 1, #start do
-    local char = start:sub(i, i)
-    local found_pos = entry:find(char, last_pos + 1)
-
-    if found_pos then
-      -- Score based on how early the character appears
-      table.insert(positions, found_pos)
-      last_pos = found_pos
-    else
-      -- Penalize if character not found in target string
-      table.insert(positions, math.huge)
-    end
-  end
-
-  return positions
-end
-
----comment
----@param entry cmp.Entry
-function M.entry_pos_score(entry)
-  local replace_string = M.get_entry_replace_string(entry)
-  if not replace_string then
-    return nil
-  end
-  local filter = entry:get_filter_text()
-  return M.calculate_pos_score(replace_string, filter)
-end
-
----comment
 ---@param entry1 cmp.Entry
 ---@param entry2 cmp.Entry
 ---@return boolean|nil
-function M.pos_score(entry1, entry2)
-  local score1 = M.entry_pos_score(entry1)
-  local score2 = M.entry_pos_score(entry2)
+function M.positions(entry1, entry2)
+  local replace_string = M.get_entry_replace_string(entry1)
+  local filter1 = entry1:get_filter_text()
+  local filter2 = entry2:get_filter_text()
 
-  if not score1 or not score2 then
+  if not replace_string then
     return nil
   end
 
-  -- Compare element by element in the found positions arrays
-  for i = 1, math.min(#score1, #score2) do
-    if score1[i] ~= score2[i] then
-      return score1[i] < score2[i]  -- Prefer smaller (earlier) positions
+  local pos1 = 0
+  local pos2 = 0
+  for i = 1, #replace_string do
+    local char = replace_string:sub(i, i)
+    pos1 = filter1:find(char, pos1 + 1)
+    pos2 = filter2:find(char, pos2 + 1)
+
+    if not pos1 or not pos2 then
+      if pos1 then
+        return true
+      end
+      if pos2 then
+        return false
+      end
+      return nil
+    end
+
+    if pos1 ~= pos2 then
+      vim.print({
+        {
+          filter1,
+          pos1,
+        },
+        {
+          filter2,
+          pos2,
+        },
+      })
+      return pos1 < pos2
     end
   end
 
