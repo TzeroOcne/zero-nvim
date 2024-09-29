@@ -19,7 +19,7 @@ end
 ---@param start string
 ---@param entry string
 ---@return integer[]
-function M.pos_score(start, entry)
+function M.calculate_pos_score(start, entry)
   ---@type integer[]
   local positions = {}
   local last_pos = 0
@@ -49,14 +49,14 @@ function M.entry_pos_score(entry)
     return nil
   end
   local filter = entry:get_filter_text()
-  return M.pos_score(replace_string, filter)
+  return M.calculate_pos_score(replace_string, filter)
 end
 
 ---comment
 ---@param entry1 cmp.Entry
 ---@param entry2 cmp.Entry
 ---@return boolean|nil
-function M.compare_pos_score(entry1, entry2)
+function M.pos_score(entry1, entry2)
   local score1 = M.entry_pos_score(entry1)
   local score2 = M.entry_pos_score(entry2)
 

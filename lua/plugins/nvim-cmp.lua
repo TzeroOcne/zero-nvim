@@ -132,7 +132,7 @@ return {
           -- compare.offset,
           compare.exact,
           -- compare.score,
-          zero_compare.compare_pos_score,
+          zero_compare.pos_score,
           zero_compare.compare_kind,
           -- compare.scopes,
           compare.recently_used,
