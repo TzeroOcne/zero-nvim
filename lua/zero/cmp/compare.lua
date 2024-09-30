@@ -46,16 +46,6 @@ function M.positions(entry1, entry2)
     end
 
     if pos1 ~= pos2 then
-      vim.print({
-        {
-          filter1,
-          pos1,
-        },
-        {
-          filter2,
-          pos2,
-        },
-      })
       return pos1 < pos2
     end
   end
