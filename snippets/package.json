@@ -10,6 +10,12 @@
           "markdown"
         ],
         "path": "./markdown.json"
+      },
+      {
+        "language": [
+          "go"
+        ],
+        "path": "./golang.json"
       }
     ]
   }

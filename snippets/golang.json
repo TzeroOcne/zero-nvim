@@ -1,0 +1,11 @@
+{
+  "Handler error not nil": {
+    "prefix": ["iferr"],
+    "body": [
+      "if err != nil {",
+      "	$0",
+      "}"
+    ],
+    "description": "Create error handler"
+  }
+}
