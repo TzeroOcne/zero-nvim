@@ -32,8 +32,8 @@ function M.positions(entry1, entry2)
   local pos2 = 0
   for i = 1, #replace_string do
     local char = replace_string:sub(i, i)
-    pos1 = filter1:find(char, pos1 + 1)
-    pos2 = filter2:find(char, pos2 + 1)
+    pos1 = filter1:lower():find(char:lower(), pos1 + 1)
+    pos2 = filter2:lower():find(char:lower(), pos2 + 1)
 
     if not pos1 or not pos2 then
       if pos1 then
