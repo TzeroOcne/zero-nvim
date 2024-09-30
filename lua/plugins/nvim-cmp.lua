@@ -48,7 +48,7 @@ return {
       end,
     }
     local cmp = require("cmp")
-    local auto_select = true
+    local auto_select = false
     return {
       auto_brackets = {}, -- configure any filetype to auto add brackets
       formatting = {
