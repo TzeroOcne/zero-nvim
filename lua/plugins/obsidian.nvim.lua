@@ -36,6 +36,7 @@ return {
         function()
           return require("obsidian").util.toggle_checkbox()
         end,
+        desc = "Interact Check",
         buffer = true,
       },
       -- Smart action depending on context, either follow link or toggle checkbox.
@@ -44,6 +45,7 @@ return {
         function()
           return require("obsidian").util.smart_action()
         end,
+        desc = "Interact",
         buffer = true,
         expr = true,
       }
