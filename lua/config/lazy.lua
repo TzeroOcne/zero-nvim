@@ -44,6 +44,7 @@ require("lazy").setup({
   -- checker = { enabled = true },
 })
 
+require('config.filetype')
 require('config.keymaps')
 
 -- Restore cursor to bar blink when exit
