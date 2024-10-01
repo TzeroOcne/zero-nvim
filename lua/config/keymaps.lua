@@ -13,7 +13,16 @@ vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = 'Co
 vim.keymap.set({ "n", "v" }, "<leader>bd", zero.bufremove, { desc = 'Remove buffer' })
 
 -- Terminal key
-local lazyterm = function() zero.terminal('zsh') end
+---comment
+---@param cmd? string
+---@return function
+local function zeroterm(cmd)
+  return function ()
+    zero.terminal(cmd or 'zsh')
+  end
+end
 vim.keymap.set({ 't' }, '<esc><esc>', '<C-\\><C-n>', { noremap = true, silent = true, desc = 'Enter normal mode' })
-vim.keymap.set({ "n", "v" }, "<C-_>", lazyterm, { noremap = true, silent = true, desc = 'Toggle terminal' })
+vim.keymap.set({ "n", "v" }, "<leader>tt", zero.select_terminal, { noremap = true, silent = true, desc = 'Select terminal' })
+vim.keymap.set({ "n", "v" }, "<leader>tg", zeroterm('lazygit'), { noremap = true, silent = true, desc = 'Lazygit' })
+vim.keymap.set({ "n", "v" }, "<C-_>", zeroterm(), { noremap = true, silent = true, desc = 'Toggle terminal' })
 vim.keymap.set({ 't' }, "<C-_>", '<cmd>close<cr>', { noremap = true, silent = true, desc = 'Toggle terminal' })

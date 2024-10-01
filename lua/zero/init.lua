@@ -99,6 +99,28 @@ function M.terminal (cmd, opts)
   return terminals[termkey]
 end
 
+---@return string[]
+function M.get_terminal_list()
+  return vim.tbl_map(
+    ---comment
+    ---@param value string
+    function (value)
+      return load('return ' .. value)().cmd
+    end,
+    vim.tbl_keys(terminals)
+  )
+end
+
+function M.select_terminal()
+  return vim.ui.select(
+    M.get_terminal_list(),
+    {},
+    function (choice)
+      M.terminal(choice)
+    end
+  )
+end
+
 ---@class JSONContext
 ---@field depth? number
 

@@ -32,6 +32,11 @@ return {
         desc = "LSP",
         icon = {},
       },
+      {
+        "<leader>t",
+        desc = "Terminal",
+        icon = {},
+      },
     },
   },
   keys = {
