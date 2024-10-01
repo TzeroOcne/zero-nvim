@@ -13,6 +13,7 @@ return {
       { '<leader>fb', builtin.buffers, desc = "Find buffers" },
       { '<leader>ff', builtin.find_files, desc = "Find files" },
       { '<leader>fg', builtin.git_files, desc = "Find git files" },
+      { '<leader>fm', builtin.marks, desc = "Find marks" },
     }
   end,
 }

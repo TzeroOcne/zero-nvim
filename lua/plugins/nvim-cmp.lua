@@ -52,6 +52,7 @@ return {
     return {
       auto_brackets = {}, -- configure any filetype to auto add brackets
       formatting = {
+        ---@param entry cmp.Entry
         ---@param vim_item vim.CompletedItem
         format = function(entry, vim_item)
           vim_item.dup = nil
