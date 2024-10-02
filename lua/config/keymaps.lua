@@ -9,6 +9,22 @@ vim.keymap.set({ "v" }, "<C-c>", '"+y', { desc = "Yank visual to clipboard" })
 vim.keymap.set({ "n", "v" }, "<leader>cr", vim.lsp.buf.rename, { desc = 'LSP Rename' })
 vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = 'Code Action' })
 
+-- Cursor keymap
+vim.keymap.set({ "n", "v" }, "<leader>vm", function ()
+  local line = vim.fn.line('.')
+  local win_width = vim.api.nvim_win_get_width(0)
+  local line_width = vim.fn.virtcol('$') -- gets the visual column of the end of the line
+  local middle_column
+
+  if line_width < win_width then
+    middle_column = math.floor(line_width / 2)
+  else
+    middle_column = math.floor(win_width / 2)
+  end
+
+  vim.api.nvim_win_set_cursor(0, {line, middle_column})
+end, { noremap = true, silent = true })
+
 -- Buffer keymap
 vim.keymap.set({ "n", "v" }, "<leader>bd", zero.bufremove, { desc = 'Remove buffer' })
 
