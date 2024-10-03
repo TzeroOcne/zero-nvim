@@ -1,6 +1,3 @@
-local zero_compare = require('zero.cmp.compare')
-local compare = require('cmp.config.compare');
-
 return {
   "hrsh7th/nvim-cmp",
   version = false, -- last release is way too old
@@ -9,12 +6,22 @@ return {
     "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/cmp-buffer",
     "hrsh7th/cmp-path",
+    "saadparwaiz1/cmp_luasnip",
     {
       "garymjr/nvim-snippets",
       opts = {
         friendly_snippets = true,
+        search_paths = {
+          vim.fn.stdpath('config') .. '/snippets',
+          vim.fn.stdpath('config') .. '/.local/snippets',
+        }
       },
-      dependencies = { "rafamadriz/friendly-snippets" },
+      dependencies = {
+        "rafamadriz/friendly-snippets",
+        config = function()
+          require("luasnip.loaders.from_vscode").lazy_load()
+        end,
+      },
     },
     { "petertriho/cmp-git", opts = {} },
     {
@@ -22,6 +29,14 @@ return {
       opts = { ensure_installed = { "sqlfluff" } },
     },
     { "williamboman/mason-lspconfig.nvim", config = function() end },
+    {
+      "L3MON4D3/LuaSnip",
+      lazy = true,
+      opts = {
+        history = true,
+        delete_check_events = "TextChanged",
+      },
+    },
   },
   -- Not all LSP servers add brackets when completing a function.
   -- To better deal with this, LazyVim adds a custom option to cmp,
@@ -33,8 +48,9 @@ return {
   -- }
   -- ```
   ---@module 'cmd'
-  ---@param opts cmp.ConfigSchema
-  opts = function(_, opts)
+  opts = function()
+    local zero_compare = require('zero.cmp.compare')
+    local compare = require('cmp.config.compare');
     local has_words_before = function()
       unpack = unpack or table.unpack
       local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -42,16 +58,12 @@ return {
     end
 
     vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
-    opts.snippet = {
-      expand = function(args)
-        require("luasnip").lsp_expand(args.body)
-      end,
-    }
     local cmp = require("cmp")
     local auto_select = false
     return {
       auto_brackets = {}, -- configure any filetype to auto add brackets
       formatting = {
+        expandable_indicator = true,
         ---@param entry cmp.Entry
         ---@param vim_item vim.CompletedItem
         format = function(entry, vim_item)
@@ -112,13 +124,13 @@ return {
       }),
       sources = cmp.config.sources({
         { name = "luasnip" },
-        { name = "snippets" },
         { name = "nvim_lsp" },
         { name = "path" },
         { name = "git" },
         { name = "lazydev", group_index = 0 },
       }, {
         { name = "buffer" },
+        { name = "snippets" },
       }),
       experimental = {
         ghost_text = {
