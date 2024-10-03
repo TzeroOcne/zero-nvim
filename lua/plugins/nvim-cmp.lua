@@ -49,6 +49,7 @@ return {
   -- ```
   ---@module 'cmd'
   opts = function()
+    local zero_cmp = require('zero.cmp')
     local zero_compare = require('zero.cmp.compare')
     local compare = require('cmp.config.compare');
     local has_words_before = function()
@@ -62,6 +63,11 @@ return {
     local auto_select = false
     return {
       auto_brackets = {}, -- configure any filetype to auto add brackets
+      snippet = {
+        expand = function (args)
+          zero_cmp.expand(args.body)
+        end
+      },
       formatting = {
         expandable_indicator = true,
         ---@param entry cmp.Entry
@@ -124,13 +130,13 @@ return {
       }),
       sources = cmp.config.sources({
         { name = "luasnip" },
+        { name = "snippets" },
         { name = "nvim_lsp" },
         { name = "path" },
         { name = "git" },
         { name = "lazydev", group_index = 0 },
       }, {
         { name = "buffer" },
-        { name = "snippets" },
       }),
       experimental = {
         ghost_text = {
@@ -157,5 +163,8 @@ return {
         },
       },
     }
+  end,
+  config = function (_, opts)
+    require('zero.cmp').setup(opts)
   end,
 }
