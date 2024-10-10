@@ -8,6 +8,7 @@ vim.keymap.set({ "v" }, "<C-c>", '"+y', { desc = "Yank visual to clipboard" })
 -- LSP keymap
 vim.keymap.set({ "n", "v" }, "<leader>cr", vim.lsp.buf.rename, { desc = 'LSP Rename' })
 vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = 'Code Action' })
+vim.keymap.set({ "i" }, "<C-k>", vim.lsp.buf.signature_help, { desc = 'Signature Help' })
 
 -- Cursor keymap
 vim.keymap.set({ "n", "v" }, "<leader>vm", function ()
@@ -27,6 +28,8 @@ end, { noremap = true, silent = true })
 
 -- Buffer keymap
 vim.keymap.set({ "n", "v" }, "<leader>bd", zero.bufremove, { desc = 'Remove buffer' })
+vim.keymap.set({ "n", "v" }, "<leader>bo", zero.close_all_file_buffers_non_visible, { desc = 'Remove non visible file buffer' })
+vim.keymap.set({ "n", "v" }, "<leader>bx", zero.close_all_file_buffers, { desc = 'Remove file buffer' })
 
 -- Terminal key
 ---comment

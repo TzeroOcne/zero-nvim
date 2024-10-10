@@ -198,4 +198,100 @@ function M.get_char_before_cursor()
   return char_before_cursor
 end
 
+local outline = require('outline');
+
+local function is_file_buffer(buf)
+  return vim.api.nvim_buf_is_loaded(buf) and
+         vim.api.nvim_buf_get_name(buf) ~= "" and
+         vim.api.nvim_get_option_value('buftype', { buf = buf }) == ""
+end
+
+local function prompt_action(buf)
+  local buf_name = vim.api.nvim_buf_get_name(buf)
+  local messages = "&All\n&Discard all\n&Yes (write)\n&No (discard)\n&Skip\n&Cancel"
+  local choice = vim.fn.confirm(string.format("Save %s?", buf_name), messages)
+  if choice == 1 then
+    -- Write all
+    return "write_all"
+  elseif choice == 2 then
+    -- Discard all
+    return "discard_all"
+  elseif choice == 3 then
+    -- Write current buffer
+    return "write"
+  elseif choice == 4 then
+    -- Discard current buffer
+    return "discard"
+  elseif choice == 5 then
+    -- Skip closing current buffer
+    return "skip"
+  elseif choice == 6 then
+    -- Cancel closing buffer process
+    return "cancel"
+  else
+    -- Invalid input
+    return prompt_action(buf)
+  end
+end
+
+function M.close_all_file_buffers()
+  outline.close()
+
+  local buffers = vim.api.nvim_list_bufs()
+  local action = ""
+
+  for _, buf in ipairs(buffers) do
+    if is_file_buffer(buf) then
+      if action ~= "write_all" and action ~= "discard_all" then
+        action = prompt_action(buf)
+      end
+      if action == "write" or action == "write_all" then
+        vim.api.nvim_buf_call(buf, function()
+          vim.cmd("write")
+        end)
+        M.bufremove(buf)
+      elseif action == "discard" or action == "discard_all" then
+        M.bufremove(buf)
+      elseif action == "skip" then
+        -- Skip this buffer, continue to next
+      elseif action == "cancel" then
+        break
+      end
+    end
+  end
+end
+
+function M.close_all_file_buffers_non_visible()
+  outline.close()
+
+  local visible_buffers = {}
+  local windows = vim.api.nvim_list_wins()
+  for _, win in ipairs(windows) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    visible_buffers[buf] = true
+  end
+
+  local buffers = vim.api.nvim_list_bufs()
+  local action = ""
+  for _, buf in ipairs(buffers) do
+    if is_file_buffer(buf) and not visible_buffers[buf] then
+      if action ~= "write_all" and action ~= "discard_all" then
+        action = prompt_action(buf)
+      end
+      if action == "write" or action == "write_all" then
+        vim.api.nvim_buf_call(buf, function()
+          vim.cmd("write")
+        end)
+        M.bufremove(buf)
+      elseif action == "discard" or action == "discard_all" then
+        M.bufremove(buf)
+      elseif action == "skip" then
+        -- Skip this buffer, continue to next
+      elseif action == "cancel" then
+        break
+      end
+    end
+  end
+end
+
 return M

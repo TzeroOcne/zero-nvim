@@ -138,6 +138,11 @@ return {
       }, {
         { name = "buffer" },
       }),
+      view = {
+        docs = {
+          auto_open = false,
+        },
+      },
       experimental = {
         ghost_text = {
           hl_group = "CmpGhostText",

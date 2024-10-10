@@ -8,3 +8,19 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.api.nvim_buf_set_keymap(0, "n", "<M-l>", "zl", { noremap = true, silent = true })
   end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "lazy",
+  callback = function()
+    local win = vim.api.nvim_get_current_win()
+    vim.wo[win][0].cursorline = true
+    vim.api.nvim_set_hl(0, "CursorLine", { underline = true })
+  end,
+})
+
+-- vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+--   pattern = "*.au3",
+--   callback = function()
+--     vim.bo.filetype = "autoit"
+--   end
+-- })

@@ -2,6 +2,13 @@ return {
   "folke/noice.nvim",
   event = "VeryLazy",
   opts = {
+    lsp = {
+      signature = {
+        auto_open = {
+          enabled = false,
+        },
+      },
+    },
     -- add any options here
     views = {
       cmdline_popup = {
