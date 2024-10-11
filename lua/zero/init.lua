@@ -116,7 +116,9 @@ function M.select_terminal()
     M.get_terminal_list(),
     {},
     function (choice)
-      M.terminal(choice)
+      if choice then
+        M.terminal(choice)
+      end
     end
   )
 end
