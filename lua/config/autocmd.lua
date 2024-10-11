@@ -18,6 +18,35 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- close some filetypes with <q>
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = {
+    "PlenaryTestPopup",
+    "grug-far",
+    "help",
+    "lspinfo",
+    "notify",
+    "qf",
+    "spectre_panel",
+    "startuptime",
+    "tsplayground",
+    "neotest-output",
+    "checkhealth",
+    "neotest-summary",
+    "neotest-output-panel",
+    "dbout",
+    "gitsigns-blame",
+  },
+  callback = function(event)
+    vim.bo[event.buf].buflisted = false
+    vim.keymap.set("n", "q", "<cmd>close<cr>", {
+      buffer = event.buf,
+      silent = true,
+      desc = "Quit buffer",
+    })
+  end,
+})
+
 -- vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 --   pattern = "*.au3",
 --   callback = function()
