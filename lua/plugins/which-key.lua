@@ -18,6 +18,11 @@ return {
         icon = {},
       },
       {
+        "<leader>c",
+        desc = "LSP",
+        icon = {},
+      },
+      {
         "<leader>f",
         desc = "Telescope Find",
         icon = {},
