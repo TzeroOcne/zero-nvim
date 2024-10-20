@@ -108,6 +108,33 @@ function M.setup(opts)
     return M.snippet_preview(input)
   end
 
+  local get_entries = require("cmp.source").get_entries
+  local async = require('cmp.utils.async')
+  ---@param self cmp.Source
+  ---@param ctx cmp.Context
+  ---@return cmp.Entry[]
+  require("cmp.source").get_entries = function (self, ctx)
+    local entries = get_entries(self, ctx)
+    ---@type cmp.Entry[]
+    local filtered = {}
+    ---@type table<string, boolean>
+    local list = {}
+    for _, entry in ipairs(entries) do
+      local text = entry:get_filter_text()
+      local kind = entry:get_kind()
+      local key = vim.inspect({ text, kind });
+      if not list[key] then
+        list[key] = true
+        filtered[#filtered+1] = entry
+      end
+      async.yield()
+      if ctx.aborted then
+        async.abort()
+      end
+    end
+    return filtered
+  end
+
   local cmp = require("cmp")
   cmp.setup(opts)
   cmp.event:on("confirm_done", function(event)

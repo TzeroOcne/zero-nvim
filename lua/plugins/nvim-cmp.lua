@@ -73,12 +73,12 @@ return {
         ---@param entry cmp.Entry
         ---@param vim_item vim.CompletedItem
         format = function(entry, vim_item)
-          vim_item.dup = nil
           vim_item.menu = ({
             nvim_lsp = '[L]',
             path     = '[F]',
             buffer   = '[B]',
           })[entry.source.name]
+
           return vim_item
         end
       },
@@ -129,13 +129,13 @@ return {
         end, { "i" }),
       }),
       sources = cmp.config.sources({
-        { name = "luasnip" },
-        { name = "snippets" },
         { name = "nvim_lsp" },
         { name = "path" },
         { name = "git" },
         { name = "lazydev", group_index = 0 },
       }, {
+        { name = "luasnip" },
+        { name = "snippets" },
         { name = "buffer" },
       }),
       view = {

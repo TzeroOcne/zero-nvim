@@ -2,7 +2,6 @@ local M = {}
 
 local types = require('cmp.types')
 
----comment
 ---@param entry cmp.Entry
 function M.get_entry_replace_string(entry)
   local range = entry:get_insert_range()
@@ -15,26 +14,29 @@ function M.get_entry_replace_string(entry)
   return vim.api.nvim_get_current_line():sub(start_pos, end_pos)
 end
 
----comment
+---@param entry cmp.Entry
+function M.expand_matches(entry)
+  ---@type (integer|nil)[]
+  local position_list = {}
+  for _, value in ipairs(entry.matches) do
+    for i = value.word_match_start, value.word_match_end do
+      position_list[#position_list+1] = i
+    end
+  end
+
+  return position_list
+end
+
 ---@param entry1 cmp.Entry
 ---@param entry2 cmp.Entry
 ---@return boolean|nil
 function M.positions(entry1, entry2)
-  local replace_string = M.get_entry_replace_string(entry1)
-  local filter1 = entry1:get_filter_text()
-  local filter2 = entry2:get_filter_text()
+  local matches1 = M.expand_matches(entry1)
+  local matches2 = M.expand_matches(entry2)
 
-  if not replace_string then
-    return nil
-  end
-
-  local pos1 = 0
-  local pos2 = 0
-  for i = 1, #replace_string do
-    local char = replace_string:sub(i, i)
-    pos1 = filter1:lower():find(char:lower(), pos1 + 1)
-    pos2 = filter2:lower():find(char:lower(), pos2 + 1)
-
+  for index = 1, math.min(#matches1, #matches2) do
+    local pos1 = matches1[index]
+    local pos2 = matches2[index]
     if not pos1 or not pos2 then
       if pos1 then
         return true
@@ -50,11 +52,17 @@ function M.positions(entry1, entry2)
     end
   end
 
+  if #matches1 ~= #matches2 then
+    return #matches1 > #matches2
+  end
+
   return nil
 end
 
 local kind_priority_map = {
-  [types.lsp.CompletionItemKind.Field] = -2,
+  [types.lsp.CompletionItemKind.Field] = -4,
+  [types.lsp.CompletionItemKind.Variable] = -3,
+  [types.lsp.CompletionItemKind.Function] = -2,
   [types.lsp.CompletionItemKind.Snippet] = -1,
   [types.lsp.CompletionItemKind.Text] = 100,
 }

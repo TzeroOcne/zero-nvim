@@ -5,6 +5,13 @@ return {
   -- branch = '0.1.x',
   event = "VeryLazy",
   dependencies = { 'nvim-lua/plenary.nvim' },
+  opts = {
+    defaults = {
+      path_display = {
+        "filename_first"
+      },
+    },
+  },
   keys = function ()
     local builtin = require('telescope.builtin')
     return {
