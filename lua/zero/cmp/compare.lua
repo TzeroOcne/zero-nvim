@@ -53,6 +53,14 @@ function M.positions(entry1, entry2)
   end
 
   if #matches1 ~= #matches2 then
+    local word = string.sub(entry1.context.cursor_before_line, entry1.source_offset)
+    if #matches1 == #word then
+      return true
+    end
+    if #matches2 == #word then
+      return false
+    end
+
     return #matches1 > #matches2
   end
 
@@ -60,6 +68,7 @@ function M.positions(entry1, entry2)
 end
 
 local kind_priority_map = {
+  [types.lsp.CompletionItemKind.Class] = -5,
   [types.lsp.CompletionItemKind.Field] = -4,
   [types.lsp.CompletionItemKind.Variable] = -3,
   [types.lsp.CompletionItemKind.Function] = -2,

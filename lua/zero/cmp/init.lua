@@ -1,3 +1,5 @@
+local zero_compare = require('zero.cmp.compare')
+
 local M = {}
 
 ---@alias Placeholder {n:number, text:string}
@@ -119,11 +121,14 @@ function M.setup(opts)
     local filtered = {}
     ---@type table<string, boolean>
     local list = {}
+    local current_line = vim.api.nvim_get_current_line()
     for _, entry in ipairs(entries) do
+      local line = string.sub(current_line, entry:get_offset())
+      local word = string.gsub(line, "^%.", "")
       local text = entry:get_filter_text()
       local kind = entry:get_kind()
       local key = vim.inspect({ text, kind });
-      if not list[key] then
+      if not list[key] and (word == "" or #entry.matches > 0) then
         list[key] = true
         filtered[#filtered+1] = entry
       end
