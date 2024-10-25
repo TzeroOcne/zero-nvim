@@ -34,13 +34,14 @@ map({ "n", "v" }, "<leader>bd", zero.bufremove, { desc = 'Remove buffer' })
 map({ "n", "v" }, "<leader>bo", zero.close_all_file_buffers_non_visible, { desc = 'Remove non visible file buffer' })
 map({ "n", "v" }, "<leader>bx", zero.close_all_file_buffers, { desc = 'Remove file buffer' })
 
+print(vim.o.shell)
 -- Terminal key
 ---comment
 ---@param cmd? string
 ---@return function
 local function zeroterm(cmd)
   return function ()
-    zero.terminal(cmd or 'zsh')
+    zero.terminal(cmd or zero.has_zsh() and 'zsh' or 'pwsh')
   end
 end
 map({ 't' }, '<esc><esc>', '<C-\\><C-n>', { noremap = true, silent = true, desc = 'Enter normal mode' })

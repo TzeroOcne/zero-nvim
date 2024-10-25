@@ -63,6 +63,10 @@ function M.opts(name)
   return Plugin.values(plugin, "opts", false)
 end
 
+function M.has_zsh()
+  return vim.fn.executable("zsh.exe") == 1
+end
+
 ---@class LazyTermOpts: LazyCmdOptions
 ---@field interactive? boolean
 ---@field esc_esc? boolean
