@@ -122,8 +122,9 @@ function M.setup(opts)
     ---@type table<string, boolean>
     local list = {}
     local current_line = vim.api.nvim_get_current_line()
+    local _, end_pos = unpack(vim.api.nvim_win_get_cursor(0))
     for _, entry in ipairs(entries) do
-      local line = string.sub(current_line, entry:get_offset())
+      local line = string.sub(current_line, entry:get_offset(), end_pos)
       local word = string.gsub(line, "^%.", "")
       local text = entry:get_filter_text()
       local kind = entry:get_kind()
