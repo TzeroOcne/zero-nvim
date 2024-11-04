@@ -1,10 +1,11 @@
 local zero = require('zero')
 local zero_lsp = require('zero.lsp')
+local telescope = require('telescope.builtin')
 local map = vim.keymap.set;
 
 map({ "n", "v" }, "<C-n>", "<cmd>nohl<cr>")
 map({ "n", "v" }, "<leader>ld", vim.lsp.buf.definition, { desc = "Go to lsp definition" })
-map({ "n", "v" }, "<leader>lr", vim.lsp.buf.references, { desc = "Go to lsp references" })
+map({ "n", "v" }, "<leader>lr", telescope.lsp_references, { desc = "Go to lsp references" })
 map({ "v" }, "<C-c>", '"+y', { desc = "Yank visual to clipboard" })
 
 -- LSP keymap
