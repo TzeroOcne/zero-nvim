@@ -68,10 +68,11 @@ function M.positions(entry1, entry2)
 end
 
 local kind_priority_map = {
-  [types.lsp.CompletionItemKind.Class] = -5,
-  [types.lsp.CompletionItemKind.Field] = -4,
-  [types.lsp.CompletionItemKind.Variable] = -3,
-  [types.lsp.CompletionItemKind.Function] = -2,
+  [types.lsp.CompletionItemKind.Field] = -6,
+  [types.lsp.CompletionItemKind.Constant] = -5,
+  [types.lsp.CompletionItemKind.Variable] = -4,
+  [types.lsp.CompletionItemKind.Function] = -3,
+  [types.lsp.CompletionItemKind.Class] = -2,
   [types.lsp.CompletionItemKind.Snippet] = -1,
   [types.lsp.CompletionItemKind.Text] = 100,
 }
