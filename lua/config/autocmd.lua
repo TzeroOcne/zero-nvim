@@ -47,9 +47,26 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
---   pattern = "*.au3",
---   callback = function()
---     vim.bo.filetype = "autoit"
---   end
--- })
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  pattern = ".env*",
+  callback = function()
+    vim.bo.filetype = "config"
+  end,
+})
+
+local client;
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "autoit",
+  callback = function()
+    if not client then
+      client = vim.lsp.start_client {
+        name = "AutoIt LSP",
+        cmd = { os.getenv('HOME') .. "\\Project\\autoit-ls\\zig-out\\bin\\autoit-ls.exe" },
+      }
+    end
+    if client then
+      vim.lsp.buf_attach_client(0, client)
+    end
+  end,
+})

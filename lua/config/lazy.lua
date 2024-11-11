@@ -61,11 +61,6 @@ vim.cmd([[
   colorscheme tokyonight-night
 ]])
 
--- local client = vim.lsp.start_client {
---   name = "AutoIt LSP",
---   cmd = { "C:\\Users\\qadzi\\Project\\autoit-ls\\zig-out\\bin\\autoit-ls.exe" },
--- }
-
 vim.api.nvim_set_hl(0, "Comment", { fg="#909090" })
 vim.api.nvim_set_hl(0, "DiagnosticUnnecessary", { fg="#909090" })
 vim.api.nvim_set_hl(0, 'LineNrAbove', { fg='#009090', bold=true })
