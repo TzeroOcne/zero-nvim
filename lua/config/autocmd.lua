@@ -70,3 +70,20 @@ vim.api.nvim_create_autocmd("FileType", {
     end
   end,
 })
+
+-- Function to check if the root directory contains a folder named .obsidian
+local function is_obsidian_project()
+  local cwd = vim.fn.getcwd()
+  return vim.fn.isdirectory(cwd .. "/.obsidian") == 1
+end
+
+-- Autocommand to set tabstop and shiftwidth when opening markdown files in .obsidian projects
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    if is_obsidian_project() then
+      vim.bo.tabstop = 2
+      vim.bo.shiftwidth = 2
+    end
+  end,
+})
