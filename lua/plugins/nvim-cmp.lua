@@ -129,6 +129,8 @@ return {
         end, { "i" }),
       }),
       sources = cmp.config.sources({
+        -- Copilot Source
+        { name = "copilot" },
         { name = "nvim_lsp" },
         { name = "path" },
         { name = "git" },
