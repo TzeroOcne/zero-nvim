@@ -1,5 +1,6 @@
 local M = {}
 
+local zero = require('zero')
 local types = require('cmp.types')
 
 ---@param entry cmp.Entry
@@ -27,9 +28,7 @@ function M.expand_matches(entry)
   return position_list
 end
 
----@param entry1 cmp.Entry
----@param entry2 cmp.Entry
----@return boolean|nil
+---@type cmp.ComparatorFunction
 function M.positions(entry1, entry2)
   local matches1 = M.expand_matches(entry1)
   local matches2 = M.expand_matches(entry2)
@@ -82,10 +81,12 @@ local kind_priority_map = {
 ---@param entry2 cmp.Entry
 ---@return boolean|nil
 function M.compare_kind(entry1, entry2)
+  local source1 = entry1.source.name;
+  local source2 = entry2.source.name;
   local kind1 = entry1:get_kind() --- @type lsp.CompletionItemKind | number
   local kind2 = entry2:get_kind() --- @type lsp.CompletionItemKind | number
-  kind1 = kind_priority_map[kind1] or kind1
-  kind2 = kind_priority_map[kind2] or kind2
+  kind1 = source1 == "copilot" and -100 or kind_priority_map[kind1] or kind1
+  kind2 = source2 == "copilot" and -100 or kind_priority_map[kind2] or kind2
   if kind1 ~= kind2 then
     local diff = kind1 - kind2
     if diff < 0 then
