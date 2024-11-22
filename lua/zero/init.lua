@@ -1,52 +1,5 @@
 local M = {}
-
-local lazy_util = require('lazy.util')
-
----@type table<string, LazyFloat>
-local terminals = {}
-
----@param buf number?
-function M.bufremove(buf)
-  buf = buf or 0
-  buf = buf == 0 and vim.api.nvim_get_current_buf() or buf
-
-  if vim.bo.modified then
-    local choice = vim.fn.confirm(("Save changes to %q?"):format(vim.fn.bufname()), "&Yes\n&No\n&Cancel")
-    if choice == 0 or choice == 3 then -- 0 for <Esc>/<C-c> and 3 for Cancel
-      return
-    end
-    if choice == 1 then -- Yes
-      vim.cmd.write()
-    end
-  end
-
-  for _, win in ipairs(vim.fn.win_findbuf(buf)) do
-    vim.api.nvim_win_call(win, function()
-      if not vim.api.nvim_win_is_valid(win) or vim.api.nvim_win_get_buf(win) ~= buf then
-        return
-      end
-      -- Try using alternate buffer
-      local alt = vim.fn.bufnr("#")
-      if alt ~= buf and vim.fn.buflisted(alt) == 1 then
-        vim.api.nvim_win_set_buf(win, alt)
-        return
-      end
-
-      -- Try using previous buffer
-      local has_previous = pcall(vim.cmd, "bprevious")
-      if has_previous and buf ~= vim.api.nvim_win_get_buf(win) then
-        return
-      end
-
-      -- Create new listed buffer
-      local new_buf = vim.api.nvim_create_buf(true, false)
-      vim.api.nvim_win_set_buf(win, new_buf)
-    end)
-  end
-  if vim.api.nvim_buf_is_valid(buf) then
-    pcall(vim.cmd, "bdelete! " .. buf)
-  end
-end
+local snacks = require('snacks')
 
 ---@param name string
 function M.get_plugin(name)
@@ -67,40 +20,17 @@ function M.has_zsh()
   return vim.fn.executable("zsh.exe") == 1
 end
 
----@class LazyTermOpts: LazyCmdOptions
----@field interactive? boolean
----@field esc_esc? boolean
----@field ctrl_hjkl? boolean
+local terminals = {}
 
 -- Opens a floating terminal (interactive by default)
----@param cmd? string[]|string
----@param opts? LazyTermOpts
+---@param cmd? string | string[]
+---@param opts? snacks.terminal.Opts| {create?: boolean}
 function M.terminal (cmd, opts)
-  opts = vim.tbl_deep_extend('force', {
-    ft = 'lazyterm',
-    size = { width = 0.9, height = 0.9 },
-    persistent = true,
-  }, opts or {}, { persistent = true }) --[[@as LazyTermOpts]]
-
-  local termkey = vim.inspect({ cmd = cmd or "shell", cwd = opts.cwd, env = opts.env, count = vim.v.count1 })
-
-  if terminals[termkey] and terminals[termkey]:buf_valid() then
-    terminals[termkey]:toggle()
-  else
-    terminals[termkey] = lazy_util.float_term(cmd, opts)
-    local buf = terminals[termkey].buf
-
-    vim.api.nvim_create_autocmd("BufEnter", {
-      buffer = buf,
-      callback = function()
-        vim.cmd.startinsert()
-      end,
-    })
-
-    vim.cmd('noh')
-  end
-
-  return terminals[termkey]
+  opts = opts or {}
+  local id = vim.inspect({ cmd = cmd, cwd = opts.cwd, env = opts.env, count = vim.v.count1 })
+  local terminal = snacks.terminal(cmd, opts)
+  terminals[id] = terminal
+  return terminal
 end
 
 ---@return string[]
@@ -206,98 +136,69 @@ end
 
 local outline = require('outline');
 
+---Check if a buffer is a file buffer
+---@param buf integer
+---@return boolean
 local function is_file_buffer(buf)
   return vim.api.nvim_buf_is_loaded(buf) and
          vim.api.nvim_buf_get_name(buf) ~= "" and
          vim.api.nvim_get_option_value('buftype', { buf = buf }) == ""
 end
 
-local function prompt_action(buf)
-  local buf_name = vim.api.nvim_buf_get_name(buf)
-  local messages = "&All\n&Discard all\n&Yes (write)\n&No (discard)\n&Skip\n&Cancel"
-  local choice = vim.fn.confirm(string.format("Save %s?", buf_name), messages)
-  if choice == 1 then
-    -- Write all
-    return "write_all"
-  elseif choice == 2 then
-    -- Discard all
-    return "discard_all"
-  elseif choice == 3 then
-    -- Write current buffer
-    return "write"
-  elseif choice == 4 then
-    -- Discard current buffer
-    return "discard"
-  elseif choice == 5 then
-    -- Skip closing current buffer
-    return "skip"
-  elseif choice == 6 then
-    -- Cancel closing buffer process
-    return "cancel"
-  else
-    -- Invalid input
-    return prompt_action(buf)
-  end
-end
-
-function M.close_all_file_buffers()
-  outline.close()
-
+function M.get_file_buffer_list()
   local buffers = vim.api.nvim_list_bufs()
-  local action = ""
-
+  ---@type integer[]
+  local result = {}
   for _, buf in ipairs(buffers) do
     if is_file_buffer(buf) then
-      if action ~= "write_all" and action ~= "discard_all" then
-        action = prompt_action(buf)
-      end
-      if action == "write" or action == "write_all" then
-        vim.api.nvim_buf_call(buf, function()
-          vim.cmd("write")
-        end)
-        M.bufremove(buf)
-      elseif action == "discard" or action == "discard_all" then
-        M.bufremove(buf)
-      elseif action == "skip" then
-        -- Skip this buffer, continue to next
-      elseif action == "cancel" then
-        break
-      end
+      result[#result + 1] = buf
     end
   end
+  return result
 end
 
-function M.close_all_file_buffers_non_visible()
-  outline.close()
-
+function M.get_non_visible_file_buffer_list()
+  local file_buffers = M.get_file_buffer_list()
+  ---@type table<integer, boolean>
   local visible_buffers = {}
   local windows = vim.api.nvim_list_wins()
   for _, win in ipairs(windows) do
     local buf = vim.api.nvim_win_get_buf(win)
     visible_buffers[buf] = true
   end
-
-  local buffers = vim.api.nvim_list_bufs()
-  local action = ""
-  for _, buf in ipairs(buffers) do
-    if is_file_buffer(buf) and not visible_buffers[buf] then
-      if action ~= "write_all" and action ~= "discard_all" then
-        action = prompt_action(buf)
-      end
-      if action == "write" or action == "write_all" then
-        vim.api.nvim_buf_call(buf, function()
-          vim.cmd("write")
-        end)
-        M.bufremove(buf)
-      elseif action == "discard" or action == "discard_all" then
-        M.bufremove(buf)
-      elseif action == "skip" then
-        -- Skip this buffer, continue to next
-      elseif action == "cancel" then
-        break
-      end
+  ---@type integer[]
+  local result = {}
+  for _, buf in ipairs(file_buffers) do
+    if not visible_buffers[buf] then
+      result[#result + 1] = buf
     end
   end
+  return result
+end
+
+function M.bufdelete()
+  outline.close()
+
+  snacks.bufdelete.delete()
+end
+
+function M.close_all_file_buffers()
+  outline.close()
+
+  snacks.bufdelete.delete({
+    filter = is_file_buffer,
+  })
+end
+
+function M.close_all_file_buffers_non_visible()
+  outline.close()
+
+  local buffers = M.get_non_visible_file_buffer_list()
+  snacks.bufdelete.delete({
+    filter = function (buf)
+      return vim.tbl_contains(buffers, buf)
+    end,
+  })
 end
 
 return M

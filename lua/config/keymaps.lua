@@ -2,6 +2,7 @@ local zero = require('zero')
 local zero_lsp = require('zero.lsp')
 local telescope = require('telescope.builtin')
 local map = vim.keymap.set;
+local snacks = require('snacks')
 
 map({ "n", "v" }, "<C-n>", "<cmd>nohl<cr>")
 map({ "n", "v" }, "<leader>ld", vim.lsp.buf.definition, { desc = "Go to lsp definition" })
@@ -31,7 +32,7 @@ map({ "n", "v" }, "<leader>vm", function ()
 end, { noremap = true, silent = true })
 
 -- Buffer keymap
-map({ "n", "v" }, "<leader>bd", zero.bufremove, { desc = 'Remove buffer' })
+map({ "n", "v" }, "<leader>bd", zero.bufdelete, { desc = 'Remove buffer' })
 map({ "n", "v" }, "<leader>bo", zero.close_all_file_buffers_non_visible, { desc = 'Remove non visible file buffer' })
 map({ "n", "v" }, "<leader>bx", zero.close_all_file_buffers, { desc = 'Remove file buffer' })
 
@@ -46,7 +47,7 @@ local function zeroterm(cmd)
 end
 map({ 't' }, '<esc><esc>', '<C-\\><C-n>', { noremap = true, silent = true, desc = 'Enter normal mode' })
 map({ "n", "v" }, "<leader>tt", zero.select_terminal, { noremap = true, silent = true, desc = 'Select terminal' })
-map({ "n", "v" }, "<leader>tg", zeroterm('lazygit'), { noremap = true, silent = true, desc = 'Lazygit' })
+map({ "n", "v" }, "<leader>tg", function () snacks.lazygit() end, { noremap = true, silent = true, desc = 'Lazygit' })
 map({ "n", "v" }, "<C-_>", zeroterm(), { noremap = true, silent = true, desc = 'Toggle terminal' })
 map({ 't' }, "<C-_>", '<cmd>close<cr>', { noremap = true, silent = true, desc = 'Toggle terminal' })
 

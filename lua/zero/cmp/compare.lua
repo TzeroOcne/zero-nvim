@@ -32,6 +32,9 @@ end
 function M.positions(entry1, entry2)
   -- fix copilot source causing invalid order function by prioritizing copilot source
   if entry1.source.name == "copilot" or entry2.source.name == "copilot" then
+    if entry1.source.name == entry2.source.name then
+      return false
+    end
     return entry1.source.name == "copilot"
   end
   local matches1 = M.expand_matches(entry1)
