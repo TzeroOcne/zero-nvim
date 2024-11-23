@@ -30,13 +30,6 @@ end
 
 ---@type cmp.ComparatorFunction
 function M.positions(entry1, entry2)
-  -- fix copilot source causing invalid order function by prioritizing copilot source
-  if entry1.source.name == "copilot" or entry2.source.name == "copilot" then
-    if entry1.source.name == entry2.source.name then
-      return false
-    end
-    return entry1.source.name == "copilot"
-  end
   local matches1 = M.expand_matches(entry1)
   local matches2 = M.expand_matches(entry2)
 
@@ -59,7 +52,16 @@ function M.positions(entry1, entry2)
   end
 
   if #matches1 ~= #matches2 then
-    local word = string.sub(entry1.context.cursor_before_line, entry1.source_offset)
+    if #matches1 == 0 or #matches2 == 0 then
+      return #matches1 ~= 0
+    end
+
+    local line1 = entry1.context.cursor_before_line
+    local line2 = entry2.context.cursor_before_line
+    local line = #line1 > #line2 and line1 or line2
+    local offset = math.min(entry1.source_offset, entry2.source_offset)
+    local word = string.sub(line, offset)
+
     if #matches1 == #word then
       return true
     end
