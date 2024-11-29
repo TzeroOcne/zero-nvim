@@ -18,6 +18,13 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "sql" },
+  callback = function ()
+    vim.bo.commentstring = "-- %s"
+  end
+})
+
 -- close some filetypes with <q>
 vim.api.nvim_create_autocmd("FileType", {
   pattern = {
