@@ -6,3 +6,4 @@ nvim
 spell/
 .local/
 lazy-lock.json
+lua/local/

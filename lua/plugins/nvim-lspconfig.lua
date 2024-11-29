@@ -71,6 +71,10 @@ return {
         },
       },
     }
+    local ok, result = pcall(require, 'local.lspconfig')
+    if ok then
+      servers = vim.tbl_deep_extend('force', servers, result)
+    end
 
     require('mason').setup()
 
