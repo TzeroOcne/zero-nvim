@@ -10,4 +10,14 @@ function M.source_action()
   })
 end
 
+function M.organize_imports()
+  vim.lsp.buf.code_action({
+    apply = true,
+    context = {
+      only = { "source.organizeImports" },
+      diagnostics = {},
+    }
+  })
+end
+
 return M

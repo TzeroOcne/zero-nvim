@@ -13,6 +13,7 @@ map({ "v" }, "<C-c>", '"+y', { desc = "Yank visual to clipboard" })
 map({ "n", "v" }, "<leader>cr", vim.lsp.buf.rename, { desc = 'LSP Rename' })
 map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = 'Code Action' })
 map({ "n", "v" }, "<leader>cA", zero_lsp.source_action, { desc = 'Source Action' })
+map({ "n", "v" }, "<leader>co", zero_lsp.organize_imports, { desc = 'Organize Import' })
 map({ "i" }, "<C-k>", vim.lsp.buf.signature_help, { desc = 'Signature Help' })
 
 -- Cursor keymap
