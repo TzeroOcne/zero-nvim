@@ -20,6 +20,7 @@ return {
           relativenumber = true,
           numberwidth = 5,
         },
+        border = "single",
       },
       lazygit = {
         wo = {
