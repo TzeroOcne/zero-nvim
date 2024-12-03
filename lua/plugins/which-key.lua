@@ -18,6 +18,11 @@ return {
         icon = {},
       },
       {
+        "<leader><tab>",
+        desc = "Tab",
+        icon = {},
+      },
+      {
         "<leader>c",
         desc = "LSP",
         icon = {},
