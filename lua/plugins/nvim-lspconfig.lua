@@ -70,6 +70,11 @@ return {
           },
         },
       },
+      zls = {},
+      gdscript = {
+        name = "godot",
+        cmd = {"ncat", "127.0.0.1", "6005"},
+      },
     }
     local ok, result = pcall(require, 'local.lspconfig')
     if ok then
