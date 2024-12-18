@@ -35,6 +35,13 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+  pattern = "gitcommit",
+  callback = function()
+    vim.opt.statuscolumn = ""
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
   pattern = "lazy",
   callback = function()
     local win = vim.api.nvim_get_current_win()
