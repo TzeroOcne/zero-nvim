@@ -1,19 +1,21 @@
-local zero = require('zero')
-local zero_lsp = require('zero.lsp')
+local Zero = require('zero')
+local ZeroLsp = require('zero.lsp')
 local telescope = require('telescope.builtin')
 local map = vim.keymap.set;
-local snacks = require('snacks')
+local Snacks = require('snacks')
 
 map({ "n", "v" }, "<C-n>", "<cmd>nohl<cr>")
-map({ "n", "v" }, "<leader>ld", vim.lsp.buf.definition, { desc = "Go to lsp definition" })
-map({ "n", "v" }, "<leader>lr", telescope.lsp_references, { desc = "Go to lsp references" })
 map({ "v" }, "<C-c>", '"+y', { desc = "Yank visual to clipboard" })
 
--- LSP keymap
+--- LSP navigation keymap
+map({ "n", "v" }, "<leader>ld", vim.lsp.buf.definition, { desc = "Go to lsp definition" })
+map({ "n", "v" }, "<leader>lr", telescope.lsp_references, { desc = "Go to lsp references" })
+
+-- LSP Code keymap
 map({ "n", "v" }, "<leader>cr", vim.lsp.buf.rename, { desc = 'LSP Rename' })
 map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = 'Code Action' })
-map({ "n", "v" }, "<leader>cA", zero_lsp.source_action, { desc = 'Source Action' })
-map({ "n", "v" }, "<leader>co", zero_lsp.organize_imports, { desc = 'Organize Import' })
+map({ "n", "v" }, "<leader>cA", ZeroLsp.source_action, { desc = 'Source Action' })
+map({ "n", "v" }, "<leader>co", ZeroLsp.organize_imports, { desc = 'Organize Import' })
 map({ "i" }, "<C-k>", vim.lsp.buf.signature_help, { desc = 'Signature Help' })
 
 -- Cursor keymap
@@ -33,9 +35,11 @@ map({ "n", "v" }, "<leader>vm", function ()
 end, { noremap = true, silent = true })
 
 -- Buffer keymap
-map({ "n", "v" }, "<leader>bd", zero.bufdelete, { desc = 'Remove buffer' })
-map({ "n", "v" }, "<leader>bo", zero.close_all_file_buffers_non_visible, { desc = 'Remove non visible file buffer' })
-map({ "n", "v" }, "<leader>bx", zero.close_all_file_buffers, { desc = 'Remove file buffer' })
+map({ "n", "v" }, "<leader>bs", function () Snacks.scratch() end, { desc = 'Toggle scratch buffer' })
+map({ "n", "v" }, "<leader>bS", function () Snacks.scratch.select() end, { desc = 'Select scratch buffer' })
+map({ "n", "v" }, "<leader>bd", Zero.bufdelete, { desc = 'Remove buffer' })
+map({ "n", "v" }, "<leader>bo", Zero.close_all_file_buffers_non_visible, { desc = 'Remove non visible file buffer' })
+map({ "n", "v" }, "<leader>bx", Zero.close_all_file_buffers, { desc = 'Remove file buffer' })
 
 -- tabs
 map("n", "<leader><tab>l", "<cmd>tablast<cr>", { desc = "Last Tab" })
@@ -52,12 +56,12 @@ map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
 ---@return function
 local function zeroterm(cmd)
   return function ()
-    zero.terminal(cmd or zero.has_zsh() and 'zsh' or 'pwsh')
+    Zero.terminal(cmd or Zero.has_zsh() and 'zsh' or 'pwsh')
   end
 end
 map({ 't' }, '<esc><esc>', '<C-\\><C-n>', { noremap = true, silent = true, desc = 'Enter normal mode' })
-map({ "n", "v" }, "<leader>tt", zero.select_terminal, { noremap = true, silent = true, desc = 'Select terminal' })
-map({ "n", "v" }, "<leader>tg", function () snacks.lazygit() end, { noremap = true, silent = true, desc = 'Lazygit' })
+map({ "n", "v" }, "<leader>tt", Zero.select_terminal, { noremap = true, silent = true, desc = 'Select terminal' })
+map({ "n", "v" }, "<leader>tg", function () Snacks.lazygit() end, { noremap = true, silent = true, desc = 'Lazygit' })
 map({ "n", "v" }, "<C-_>", zeroterm(), { noremap = true, silent = true, desc = 'Toggle terminal' })
 map({ 't' }, "<C-_>", '<cmd>close<cr>', { noremap = true, silent = true, desc = 'Toggle terminal' })
 
