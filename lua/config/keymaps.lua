@@ -8,7 +8,16 @@ map({ "n", "v" }, "<C-n>", "<cmd>nohl<cr>")
 map({ "v" }, "<C-c>", '"+y', { desc = "Yank visual to clipboard" })
 
 --- LSP navigation keymap
-map({ "n", "v" }, "<leader>ld", vim.lsp.buf.definition, { desc = "Go to lsp definition" })
+map(
+  { "n", "v" },
+  "<leader>ld",
+  function ()
+    vim.lsp.buf.definition({
+      reuse_win = true,
+    })
+  end,
+  { desc = "Go to lsp definition" }
+)
 map({ "n", "v" }, "<leader>lr", telescope.lsp_references, { desc = "Go to lsp references" })
 
 -- LSP Code keymap
