@@ -47,6 +47,11 @@ return {
         desc = "Terminal",
         icon = {},
       },
+      {
+        "<leader>x",
+        desc = "Diagnostic",
+        icon = {},
+      },
     },
   },
   keys = {
