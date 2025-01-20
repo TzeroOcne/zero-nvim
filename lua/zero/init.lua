@@ -201,4 +201,11 @@ function M.close_all_file_buffers_non_visible()
   })
 end
 
+function M.get_line_last_char()
+  return vim.api.nvim_get_current_line():sub(-1)
+end
+
+function M.smart_join()
+end
+
 return M

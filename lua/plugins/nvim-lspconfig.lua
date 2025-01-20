@@ -12,6 +12,7 @@ return {
     -- https://github.com/nvim-lua/kickstart.nvim/blob/186018483039b20dc39d7991e4fb28090dd4750e/init.lua#L559
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+    -- local lsp_util = require('lspconfig.util')
 
     -- Auto Hot Key section
 
@@ -75,6 +76,35 @@ return {
         name = "godot",
         cmd = {"ncat", "127.0.0.1", "6005"},
       },
+      -- denols = {
+      --   root_dir = function ()
+      --     local is_deno = vim.fs.root(0, { 'deno.json', 'deno.jsonc' })
+      --     vim.print({ is_deno = is_deno, not_deno = not is_deno })
+      --     local root = is_deno
+      --       and vim.fs.root(0, {
+      --         'deno.json',
+      --         'deno.jsonc',
+      --         '.git',
+      --       })
+      --     vim.print({ root = root })
+      --     return root
+      --   end,
+      -- },
+      -- vtsls = {
+      --   root_dir = function ()
+      --     local is_deno = vim.fs.root(0, { 'deno.json', 'deno.jsonc' })
+      --     vim.print({ is_deno = is_deno, not_deno = not is_deno })
+      --     local root = not is_deno
+      --       and vim.fs.root(0, {
+      --         'tsconfig.json',
+      --         'jsconfig.json',
+      --         'package.json',
+      --         '.git',
+      --       }) or nil
+      --     vim.print({ root = root })
+      --     return root
+      --   end
+      -- },
     }
     local ok, result = pcall(require, 'local.lspconfig')
     if ok then
@@ -90,9 +120,34 @@ return {
       'stylua', -- Used to format Lua code
     })
 
+    local zero_lsp = require('zero.lsp')
+
+    if zero_lsp.is_enabled("denols") and zero_lsp.is_enabled("vtsls") then
+      local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
+      zero_lsp.disable("vtsls", is_deno)
+      zero_lsp.disable("denols", function(root_dir, config)
+        if not is_deno(root_dir) then
+          config.settings.deno.enable = false
+        end
+        return false
+      end)
+    end
+    local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")(vim.fn.getcwd())
+
     require('mason-lspconfig').setup {
       handlers = {
         function(server_name)
+          if server_name == 'denols' or server_name == 'vtsls' then
+            if not is_deno then
+              if server_name == 'denols' then
+                return
+              end
+            else
+              if server_name == 'vtsls' then
+                return
+              end
+            end
+          end
           local server = servers[server_name] or {}
           -- This handles overriding only values explicitly passed
           -- by the server configuration above. Useful when disabling

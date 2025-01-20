@@ -77,7 +77,7 @@ return {
             nvim_lsp = '[L]',
             path     = '[F]',
             buffer   = '[B]',
-          })[entry.source.name]
+          })[entry.source.name] or entry.source.name
 
           return vim_item
         end
