@@ -1,24 +1,10 @@
 local Zero = require('zero')
 local ZeroLsp = require('zero.lsp')
-local telescope = require('telescope.builtin')
 local map = vim.keymap.set;
 local Snacks = require('snacks')
 
 map({ "n", "v" }, "<C-n>", "<cmd>nohl<cr>")
 map({ "v" }, "<C-c>", '"+y', { desc = "Yank visual to clipboard" })
-
---- LSP navigation keymap
-map(
-  { "n", "v" },
-  "<leader>ld",
-  function ()
-    vim.lsp.buf.definition({
-      reuse_win = true,
-    })
-  end,
-  { desc = "Go to lsp definition" }
-)
-map({ "n", "v" }, "<leader>lr", telescope.lsp_references, { desc = "Go to lsp references" })
 
 -- LSP Code keymap
 map({ "n", "v" }, "<leader>cr", vim.lsp.buf.rename, { desc = 'LSP Rename' })
