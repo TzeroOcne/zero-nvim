@@ -29,6 +29,11 @@ return {
       },
     },
     picker = {
+      formatters = {
+        file = {
+          filename_first = true,
+        },
+      },
       layout = {
          layout = {
           width = 0.85,
