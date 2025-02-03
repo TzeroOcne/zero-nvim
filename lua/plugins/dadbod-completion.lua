@@ -1,3 +1,5 @@
+local sql_ft = { "sql", "mysql", "plsql" }
+
 return {
   "kristijanhusak/vim-dadbod-completion",
   dependencies = "vim-dadbod",
