@@ -40,9 +40,9 @@ return {
           height = 0.9,
         },
       },
-      jump = {
-        reuse_win = true,
-      },
+      -- jump = {
+      --   reuse_win = true,
+      -- },
     },
   },
   keys = {
