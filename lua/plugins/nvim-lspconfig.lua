@@ -1,3 +1,49 @@
+local tailwindlsp_opts = {
+  servers = {
+    tailwindcss = {
+      settings = {
+        tailwindCSS = {
+          lint = {
+            invalidApply = false,
+          },
+        },
+      },
+    },
+    cssls = {
+      settings = {
+        css = {
+          validate = true,
+          lint = {
+            unknownAtRules = "ignore",
+          },
+        },
+        scss = {
+          validate = true,
+          lint = {
+            unknownAtRules = "ignore",
+          },
+        },
+      },
+    },
+    volar = {
+      settings = {
+        css = {
+          validate = true,
+          lint = {
+            unknownAtRules = "ignore",
+          },
+        },
+        scss = {
+          validate = true,
+          lint = {
+            unknownAtRules = "ignore",
+          },
+        },
+      },
+    },
+  },
+}
+
 return {
   "neovim/nvim-lspconfig",
   dependencies = {
@@ -133,6 +179,10 @@ return {
       end)
     end
     local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")(vim.fn.getcwd())
+    local is_tailwind = require("lspconfig.util").root_pattern("tailwind.config.js")(vim.fn.getcwd())
+    if is_tailwind then
+      servers = vim.tbl_deep_extend('force', servers, tailwindlsp_opts.servers)
+    end
 
     require('mason-lspconfig').setup {
       handlers = {
