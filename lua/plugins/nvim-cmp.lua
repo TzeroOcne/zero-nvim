@@ -129,6 +129,8 @@ return {
         end, { "i" }),
       }),
       sources = cmp.config.sources({
+      }, {
+        { name = "snippets" },
         -- Copilot Source
         { name = "copilot" },
         { name = "codeium" },
@@ -137,8 +139,7 @@ return {
         { name = "git" },
         { name = "lazydev", group_index = 0 },
       }, {
-        { name = "luasnip" },
-        { name = "snippets" },
+        -- { name = "luasnip" },
         { name = "buffer" },
       }),
       view = {
