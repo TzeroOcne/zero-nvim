@@ -79,7 +79,7 @@ return {
             buffer   = '[B]',
           })[entry.source.name] or entry.source.name
 
-          return vim_item
+          return require('nvim-highlight-colors').format(entry, vim_item)
         end
       },
       completion = {
