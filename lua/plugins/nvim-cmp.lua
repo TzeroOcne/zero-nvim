@@ -37,6 +37,7 @@ return {
         delete_check_events = "TextChanged",
       },
     },
+    { "roobert/tailwindcss-colorizer-cmp.nvim", opts = {} },
   },
   -- Not all LSP servers add brackets when completing a function.
   -- To better deal with this, LazyVim adds a custom option to cmp,
@@ -71,15 +72,17 @@ return {
       formatting = {
         expandable_indicator = true,
         ---@param entry cmp.Entry
-        ---@param vim_item vim.CompletedItem
-        format = function(entry, vim_item)
-          vim_item.menu = ({
+        ---@param item vim.CompletedItem
+        format = function(entry, item)
+          item.menu = ({
             nvim_lsp = '[L]',
             path     = '[F]',
             buffer   = '[B]',
           })[entry.source.name] or entry.source.name
 
-          return require('nvim-highlight-colors').format(entry, vim_item)
+          -- return item
+          return require('nvim-highlight-colors').format(entry, item)
+          -- return require("tailwindcss-colorizer-cmp").formatter(entry, item)
         end
       },
       completion = {
