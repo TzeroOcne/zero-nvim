@@ -13,6 +13,16 @@ return {
     spec = {
       mode = { "n", "v" },
       {
+        "<leader>f",
+        desc = "Picker",
+        icon = {},
+      },
+      {
+        "<leader>e",
+        desc = "Explorer",
+        icon = {},
+      },
+      {
         "<leader>b",
         desc = "Buffer",
         icon = {},
@@ -25,11 +35,6 @@ return {
       {
         "<leader>c",
         desc = "LSP",
-        icon = {},
-      },
-      {
-        "<leader>f",
-        desc = "Telescope Find",
         icon = {},
       },
       {

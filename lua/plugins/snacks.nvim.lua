@@ -40,6 +40,18 @@ return {
           height = 0.9,
         },
       },
+      sources = {
+        explorer = {
+          -- your explorer picker configuration comes here
+          -- or leave it empty to use the default settings
+          layout = {
+            preset = 'sidebar',
+            layout = {
+              width = 0.2,
+            },
+          },
+        },
+      },
       -- jump = {
       --   reuse_win = true,
       -- },
@@ -53,7 +65,11 @@ return {
     { '<leader>fb', function () Snacks.picker.buffers() end, desc = 'Find buffers' },
     { '<leader>fm', function () Snacks.picker.marks() end, desc = 'Find marks' },
     -- LSP
-    { '<leader>ld', function () Snacks.picker.lsp_definitions() end, desc = 'Find marks' },
-    { '<leader>lr', function () Snacks.picker.lsp_references() end, desc = 'Find marks' },
+    { '<leader>ld', function () Snacks.picker.lsp_definitions() end, desc = 'Find definition' },
+    { '<leader>lr', function () Snacks.picker.lsp_references() end, desc = 'Find references' },
+    -- Explorer
+    { '<leader>ee', function () Snacks.explorer({ auto_close = true }) end, desc = 'View Explorer' },
+    { '<leader>eo', function () Snacks.explorer.open() end, desc = 'Open Explorer' },
+    { '<leader>er', function () Snacks.explorer.reveal() end, desc = 'Reveal Explorer' },
   },
 }
