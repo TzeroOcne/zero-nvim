@@ -45,8 +45,9 @@ require("lazy").setup({
 })
 
 require('config.filetype')
-require('config.autocmd')
 require('config.keymaps')
+require('config.autocmd')
+require('config.command')
 
 -- Restore cursor to bar blink when exit
 vim.cmd([[
