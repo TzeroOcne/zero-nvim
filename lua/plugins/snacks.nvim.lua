@@ -62,6 +62,7 @@ return {
     { '<leader>f:', function () Snacks.picker.command_history() end, desc = 'Find command' },
     { '<leader>ff', function () Snacks.picker.files() end, desc = 'Find file' },
     { '<leader>fg', function () Snacks.picker.git_files() end, desc = 'Find git files' },
+    { '<leader>fh', function () Snacks.picker.files({ hidden = true }) end, desc = 'Find git files' },
     { '<leader>fb', function () Snacks.picker.buffers() end, desc = 'Find buffers' },
     { '<leader>fm', function () Snacks.picker.marks() end, desc = 'Find marks' },
     -- LSP
