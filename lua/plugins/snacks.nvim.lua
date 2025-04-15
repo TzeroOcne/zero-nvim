@@ -78,6 +78,8 @@ return {
     { '<leader>fh', function () Snacks.picker.files({ hidden = true }) end, desc = 'Find hidden files' },
     { '<leader>fb', function () Snacks.picker.buffers() end, desc = 'Find buffers' },
     { '<leader>fm', function () Snacks.picker.marks() end, desc = 'Find marks' },
+    { '<leader>fs', function () Snacks.picker.lsp_symbols() end, desc = 'Find LSP Symbols' },
+    { '<leader>fS', function () Snacks.picker.lsp_symbols() end, desc = 'Find LSP Workspace Symbols' },
     -- LSP
     { '<leader>ld', function () Snacks.picker.lsp_definitions() end, desc = 'Find definition' },
     { '<leader>lr', function () Snacks.picker.lsp_references() end, desc = 'Find references' },

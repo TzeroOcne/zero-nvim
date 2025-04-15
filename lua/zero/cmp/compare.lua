@@ -5,7 +5,7 @@ local types = require('cmp.types')
 
 ---@param entry cmp.Entry
 function M.get_entry_replace_string(entry)
-  local range = entry:get_insert_range()
+  local range = entry.insert_range
   if not range then
     return nil
   end
