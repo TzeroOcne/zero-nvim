@@ -56,13 +56,26 @@ return {
       --   reuse_win = true,
       -- },
     },
+    lazygit = {
+      config = {
+        os = {
+          edit = 'nvim --server ' .. vim.v.servername .. ' --remote {{filename}}',
+          -- edit = 'nvim --server ' .. vim.v.servername .. ' --remote {{filename}} && nvim --server ' .. vim.v.servername .. ' --remote-send \'<C-\\><C-N>i\'',
+          -- edit = 'nvim --server ' .. vim.v.servername .. ' --remote-send "<C-\\><C-N>:q<CR>" && nvim --server ' .. vim.v.servername .. ' --remote {{filename}}',
+          -- edit = 'nvim --server ' .. vim.v.servername .. ' --remote-send "<C-\\><C-N>:e \\"{{filename}}\\"<CR>"',
+          -- edit = 'nvim --server ' .. vim.v.servername .. ' --remote-send "<C-\\><C-N>:q<CR>:e \\"{{filename}}\\"<CR>"',
+          -- edit = 'nvim --server ' .. vim.v.servername .. ' --remote-send "<C-\\><C-N>:q<CR>:echo 1<CR>"',
+          -- editPreset = 'nvim',
+        },
+      },
+    },
   },
   keys = {
     { '<leader>f/', function () Snacks.picker.grep() end , desc = 'Grep' },
     { '<leader>f:', function () Snacks.picker.command_history() end, desc = 'Find command' },
     { '<leader>ff', function () Snacks.picker.files() end, desc = 'Find file' },
     { '<leader>fg', function () Snacks.picker.git_files() end, desc = 'Find git files' },
-    { '<leader>fh', function () Snacks.picker.files({ hidden = true }) end, desc = 'Find git files' },
+    { '<leader>fh', function () Snacks.picker.files({ hidden = true }) end, desc = 'Find hidden files' },
     { '<leader>fb', function () Snacks.picker.buffers() end, desc = 'Find buffers' },
     { '<leader>fm', function () Snacks.picker.marks() end, desc = 'Find marks' },
     -- LSP
