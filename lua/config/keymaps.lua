@@ -51,7 +51,9 @@ map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
 ---@return function
 local function zeroterm(cmd)
   return function ()
-    Zero.terminal(cmd or Zero.has_zsh() and 'zsh' or 'pwsh')
+    if not Zero.close_open_terminal_buffer() then
+      Zero.terminal(cmd or Zero.has_zsh() and 'zsh' or 'pwsh')
+    end
   end
 end
 map({ 't' }, '<esc><esc>', '<C-\\><C-n>', { noremap = true, silent = true, desc = 'Enter normal mode' })
