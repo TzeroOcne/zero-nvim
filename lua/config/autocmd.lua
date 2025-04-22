@@ -9,31 +9,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-local function is_godot_project()
-  local cwd = vim.fn.getcwd()
-  return #vim.fs.find({ 'project.godot', '.git' }, { cwd = cwd }) > 0
-end
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "gdscript",
-  callback = function()
-    if is_godot_project() then
-      local port = os.getenv('GDScript_Port') or '6005'
-      local cmd = {'ncat', '127.0.0.1', port}
-      local pipe = [[\\.\pipe\godot.pipe]]
-
-      vim.lsp.start({
-        name = 'Godot',
-        cmd = cmd,
-        root_dir = vim.fs.dirname(vim.fs.find({ 'project.godot', '.git' }, { upward = true })[1]),
-        on_attach = function(client, bufnr)
-          vim.api.nvim_command([[echo serverstart(']] .. pipe .. [[')]])
-        end
-      })
-    end
-  end,
-})
-
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "gitcommit",
   callback = function()
