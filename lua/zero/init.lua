@@ -234,4 +234,24 @@ end
 function M.smart_join()
 end
 
+function M.is_godot_project()
+  local root = vim.fn.getcwd() -- or use lsp root: vim.lsp.buf.list_workspace_folders()[1]
+  local project_file = root .. "/project.godot"
+  local git_dir = root .. "/.git"
+
+  return (vim.fn.filereadable(project_file) == 1) and (vim.fn.isdirectory(git_dir) == 1)
+end
+
+-- Function to check if the root directory contains a folder named .obsidian
+function M.is_obsidian_project()
+  local cwd = vim.fn.getcwd()
+  return vim.fn.isdirectory(cwd .. "/.obsidian") == 1
+end
+
+function M.enable_blink()
+  return true
+    -- and not M.is_obsidian_project()
+    -- and M.is_godot_project()
+end
+
 return M

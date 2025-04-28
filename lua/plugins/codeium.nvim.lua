@@ -1,10 +1,11 @@
 return {
-  "Exafunction/codeium.nvim",
+  "Exafunction/windsurf.nvim",
   cmd = "Codeium",
   event = "InsertEnter",
   build = ":Codeium Auth",
+  enabled = false,
   opts = {
-    enable_cmp_source = vim.g.ai_cmp,
+    enable_cmp_source = false, -- vim.g.ai_cmp, -- or require('zero').enable_blink(),
     virtual_text = {
       enabled = not vim.g.ai_cmp,
       key_bindings = {
