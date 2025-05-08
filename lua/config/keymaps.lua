@@ -52,7 +52,7 @@ map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
 local function zeroterm(cmd)
   return function ()
     if not Zero.close_open_terminal_buffer() then
-      Zero.terminal(cmd or Zero.has_zsh() and 'zsh' or 'pwsh')
+      Zero.terminal(cmd or Zero.get_terminal())
     end
   end
 end

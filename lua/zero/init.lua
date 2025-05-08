@@ -48,6 +48,19 @@ function M.close_open_terminal_buffer()
   return false
 end
 
+function M.get_zsh()
+  return M.has_zsh() and "zsh.exe" or nil
+end
+
+function M.get_msys()
+  local msystem = os.getenv('MSYSTEM')
+  return os.getenv('MSYSTEM_PREFIX') and msystem and { "C:\\Windows\\System32\\cmd.exe ", "/c", "C:\\msys64\\msys2_shell.cmd -defterm -here -no-start -" .. msystem:lower() .. " -shell bash -c zsh" } or nil
+end
+
+function M.get_terminal()
+  return M.get_msys() or M.get_zsh() or 'pwsh'
+end
+
 -- Opens a floating terminal (interactive by default)
 ---@param cmd? string | string[]
 ---@param opts? snacks.terminal.Opts| {create?: boolean}
