@@ -1,7 +1,7 @@
 return {
   "obsidian-nvim/obsidian.nvim",
-  -- version = "*", -- recommended, use latest release instead of latest commit
-  commit = "3c967d0",
+  version = "*", -- recommended, use latest release instead of latest commit
+  -- commit = "3c967d0",
   lazy = true,
   ft = "markdown",
   -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
@@ -18,6 +18,40 @@ return {
 
     -- see below for full list of optional dependencies 👇
   },
+  keys = function ()
+    return {
+      -- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
+      {
+        "<leader>of",
+        function()
+          return require("obsidian").util.gf_passthrough()
+        end,
+        desc = "Jump link",
+        noremap = false,
+        expr = true,
+        buffer = true,
+      },
+      -- Toggle check-boxes.
+      {
+        "<leader>oc",
+        function()
+          return require("obsidian").util.toggle_checkbox()
+        end,
+        desc = "Interact Check",
+        buffer = true,
+      },
+      -- Smart action depending on context, either follow link or toggle checkbox.
+      {
+        "<leader>oo",
+        function()
+          return require("obsidian").util.smart_action()
+        end,
+        desc = "Interact",
+        buffer = true,
+        expr = true,
+      }
+    }
+  end,
   opts = function ()
     vim.o.conceallevel = 1
 
@@ -25,9 +59,11 @@ return {
       legacy_commands = false,
       workspaces = {
         {
-          name = "buf-parent",
+          name = "no-vault",
           path = function()
-            return assert(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+            -- alternatively use the CWD:
+            return assert(vim.fn.getcwd())
+            -- return assert(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
           end,
         },
       },

@@ -4,6 +4,7 @@ local highlight_map = {
   copilot = "ZeroCopilot",
 }
 local cmp_icon = require('zero.config').icons.cmp
+local max_label_width = 60
 
 return {
   'saghen/blink.cmp',
@@ -20,6 +21,9 @@ return {
     },
     {
       "Exafunction/codeium.nvim",
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+      },
       opts = { enable_cmp_source = true },
     },
     { "nvim-tree/nvim-web-devicons", opts = {} },
@@ -28,6 +32,7 @@ return {
 
   -- use a release tag to download pre-built binaries
   version = '1.*',
+  -- commit = 'e08ae37', -- include exact and score for sorting
   -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
   -- build = 'cargo build --release',
   -- If you use nix, you can build from source using latest nightly rust with:
@@ -53,9 +58,11 @@ return {
       -- https://www.reddit.com/r/neovim/comments/1htjg99/comment/m5dtwf1
       -- https://github.com/WizardStark/dotfiles/blob/1c48ac53a4c3203aaa6b1c74d61334d78a10c777/home/.config/nvim/lua/config/editor/blink_cmp.lua#L7
       ["<Tab>"] = {
+        ---@param cmp blink.cmp.API
+        ---@return boolean|nil
         function(cmp)
           if cmp.is_menu_visible() then
-            return require("blink.cmp").select_next()
+            return require("blink.cmp").select_next({ auto_insert = false })
           elseif cmp.snippet_active() then
             return cmp.snippet_forward()
           end
@@ -63,9 +70,11 @@ return {
         "fallback",
       },
       ["<S-Tab>"] = {
+        ---@param cmp blink.cmp.API
+        ---@return boolean|nil
         function(cmp)
           if cmp.is_menu_visible() then
-            return require("blink.cmp").select_prev({  })
+            return require("blink.cmp").select_prev({ auto_insert = false })
           elseif cmp.snippet_active() then
             return cmp.snippet_backward()
           end
@@ -99,6 +108,11 @@ return {
             { "kind_icon", "kind", "source_name", gap = 2 },
           },
           components = {
+            label = {
+              width = {
+                max = max_label_width,
+              },
+            },
             kind_icon = {
               text = function(ctx)
                 local icon = ctx.kind_icon
@@ -160,21 +174,60 @@ return {
       per_filetype = {
         sql = { 'snippets', 'dadbod', 'buffer' },
       },
+      -- transform_items = function (context, items)
+      --   local function context()
+      --   end
+      --   local matched_indices = require('blink.cmp.fuzzy').fuzzy_matched_indices(
+      --     context.get_line(),
+      --     context.get_cursor()[2],
+      --     vim.tbl_map(function(item) return item.label end, items),
+      --     require('blink.cmp.config').completion.keyword.range
+      --   )
+      --   ---@type table<number, { matched_indices: table<number>, item: blink.cmp.CompletionItem }>
+      --   local contexted = {}
+      --   for index, value in ipairs(items) do
+      --     contexted[index] = {
+      --       matched_indices = matched_indices[index],
+      --       item = value,
+      --     }
+      --   end
+      --   ---@param item blink.cmp.CompletionItem
+      --   local function mincount(item)
+      --     local length = #item.label
+      --     local ratio = math.pow(length / max_label_width, 2)
+      --     return math.ceil(length * (1 -))
+      --   end
+      --   table.sort(contexted, function (item_a, item_b)
+      --     local matched_a = item_a.matched_indices
+      --     local matched_b = item_b.matched_indices
+      --   end)
+      --   return items
+      -- end,
       providers = {
-        dadbod = { name = "dadbod", module = "vim_dadbod_completion.blink" },
         copilot = {
           name = "copilot",
           module = "blink-cmp-copilot",
-          score_offset = 100,
+          -- score_offset = 100,
           async = true,
         },
         codeium = {
           name = "codeium",
+          enabled = function ()
+            return vim.bo.filetype ~= 'DressingInput'
+          end,
           module = "codeium.blink",
-          score_offset = 200,
+          -- score_offset = 200,
           async = true,
-          -- Best feature of blink
           max_items = 4,
+        },
+        dadbod = { name = "dadbod", module = "vim_dadbod_completion.blink" },
+        snippets = {
+          opts = {
+            search_paths = {
+              vim.fn.stdpath('config') .. '/snippets',
+              vim.fn.stdpath('config') .. '/.local/snippets',
+            },
+          },
         },
       },
     },
@@ -195,7 +248,12 @@ return {
         'score',
         'sort_text',
       },
-    }
+    },
+    cmdline = {
+      keymap = {
+        ['<C-l>'] = { 'accept' },
+      },
+    },
   },
   opts_extend = { "sources.default" }
 }
