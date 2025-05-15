@@ -1,3 +1,4 @@
+---@module 'Snacks'
 vim.api.nvim_create_user_command('Bdf', function()
   local bufname = vim.api.nvim_buf_get_name(0)
   
@@ -14,5 +15,5 @@ vim.api.nvim_create_user_command('Bdf', function()
     print("File does not exist: " .. bufname)
   end
 
-  vim.cmd('bdelete!')
+  Snacks.bufdelete.delete({ force = true })
 end, {})
