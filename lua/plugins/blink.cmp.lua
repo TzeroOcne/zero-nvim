@@ -25,6 +25,10 @@ return {
         "nvim-lua/plenary.nvim",
       },
       opts = { enable_cmp_source = true },
+      config = function (_, opts)
+        require('codeium.util').get_other_documents = require('zero.codeium').get_other_documents
+        require("codeium").setup(opts)
+      end,
     },
     { "nvim-tree/nvim-web-devicons", opts = {} },
     "onsails/lspkind.nvim",
@@ -61,8 +65,15 @@ return {
         ---@param cmp blink.cmp.API
         ---@return boolean|nil
         function(cmp)
+          local next_idx = (cmp.get_selected_item_idx() or 0) + 1
+          local items = cmp.get_items()
+          if next_idx > #items then
+            next_idx = 0
+          end
+          local next_item = next_idx > 0 and items[next_idx]
+          local next_source = next_item and next_item.source_name
           if cmp.is_menu_visible() then
-            return require("blink.cmp").select_next({ auto_insert = false })
+            return require("blink.cmp").select_next({ auto_insert = highlight_map[next_source] and false })
           elseif cmp.snippet_active() then
             return cmp.snippet_forward()
           end
@@ -73,8 +84,12 @@ return {
         ---@param cmp blink.cmp.API
         ---@return boolean|nil
         function(cmp)
+          local prev_idx = (cmp.get_selected_item_idx() or 0) - 1
+          local items = cmp.get_items()
+          local prev_item = prev_idx > 0 and items[prev_idx]
+          local prev_source = prev_item and prev_item.source_name
           if cmp.is_menu_visible() then
-            return require("blink.cmp").select_prev({ auto_insert = false })
+            return require("blink.cmp").select_prev({ auto_insert = highlight_map[prev_source] and false })
           elseif cmp.snippet_active() then
             return cmp.snippet_backward()
           end
@@ -97,7 +112,7 @@ return {
       list = {
         selection = {
           preselect = false,
-        --   auto_insert = false,
+          auto_insert = true,
         },
       },
       documentation = { auto_show = false },

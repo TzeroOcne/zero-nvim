@@ -1,5 +1,5 @@
 local M = {}
-local snacks = require('snacks')
+local Snacks = require('snacks')
 
 ---@param name string
 function M.get_plugin(name)
@@ -67,7 +67,7 @@ end
 function M.terminal (cmd, opts)
   opts = opts or {}
   local id = vim.inspect({ cmd = cmd, cwd = opts.cwd, env = opts.env, count = vim.v.count1 })
-  local terminal = snacks.terminal(cmd, opts)
+  local terminal = Snacks.terminal(cmd, opts)
   terminals[id] = terminal
   return terminal
 end
@@ -218,13 +218,13 @@ end
 function M.bufdelete()
   outline.close()
 
-  snacks.bufdelete.delete()
+  Snacks.bufdelete.delete()
 end
 
 function M.close_all_file_buffers()
   outline.close()
 
-  snacks.bufdelete.delete({
+  Snacks.bufdelete.delete({
     filter = is_file_buffer,
   })
 end
@@ -233,7 +233,7 @@ function M.close_all_file_buffers_non_visible()
   outline.close()
 
   local buffers = M.get_non_visible_file_buffer_list()
-  snacks.bufdelete.delete({
+  Snacks.bufdelete.delete({
     filter = function (buf)
       return vim.tbl_contains(buffers, buf)
     end,
