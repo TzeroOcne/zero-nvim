@@ -40,7 +40,7 @@ map({ "n", "v" }, "<leader>bx", Zero.close_all_file_buffers, { desc = 'Remove fi
 map("n", "<leader><tab>l", "<cmd>tablast<cr>", { desc = "Last Tab" })
 map("n", "<leader><tab>o", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
 map("n", "<leader><tab>f", "<cmd>tabfirst<cr>", { desc = "First Tab" })
-map("n", "<leader><tab><tab>", "<cmd>tabnew<cr>", { desc = "New Tab" })
+map("n", "<leader><tab><tab>", "<cmd>tab split<cr>", { desc = "Open Buffer to New Tab" })
 map("n", "<leader><tab>]", "<cmd>tabnext<cr>", { desc = "Next Tab" })
 map("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Close Tab" })
 map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
@@ -85,3 +85,6 @@ map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window W
 -- Quick line navigation
 map({ "n", "v" }, "<leader>hh", "^", { desc = "Start of line" })
 map({ "n", "v" }, "<leader>hl", "$", { desc = "End of line" })
+
+-- Markdown actions
+map("x", "<leader>oc", "<Esc><cmd>silent '<,'>s/\\[ \\]/[x]/g | noh<CR>", { silent = true })
