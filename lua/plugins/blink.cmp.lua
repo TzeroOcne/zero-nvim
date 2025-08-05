@@ -4,6 +4,7 @@ local highlight_map = {
   copilot = "ZeroCopilot",
 }
 local cmp_icon = require('zero.config').icons.cmp
+local zerolog = require('zero.log')
 local max_label_width = 60
 
 return {
@@ -15,6 +16,7 @@ return {
   dependencies = {
     "rafamadriz/friendly-snippets",
     "giuxtaposition/blink-cmp-copilot",
+    -- "fang2hou/blink-copilot",
     {
       "saghen/blink.compat",
       opts = { enable_events = true },
@@ -222,7 +224,8 @@ return {
         copilot = {
           name = "copilot",
           module = "blink-cmp-copilot",
-          -- score_offset = 100,
+          -- module = "blink-copilot",
+          score_offset = 200,
           async = true,
         },
         codeium = {
@@ -231,9 +234,9 @@ return {
             return vim.bo.filetype ~= 'DressingInput'
           end,
           module = "codeium.blink",
-          -- score_offset = 200,
+          score_offset = 100,
           async = true,
-          max_items = 4,
+          max_items = 1,
         },
         dadbod = { name = "dadbod", module = "vim_dadbod_completion.blink" },
         snippets = {
@@ -258,7 +261,7 @@ return {
         -- (optionally) always prioritize exact matches
         'exact',
 
-        require('zero.cmp.blink.compare').source,
+        -- require('zero.cmp.blink.compare').source,
 
         'score',
         'sort_text',
@@ -270,5 +273,19 @@ return {
       },
     },
   },
-  opts_extend = { "sources.default" }
+  opts_extend = { "sources.default" },
+  -- config = function (_, opts)
+    -- local trigger = require('blink.cmp.completion.trigger').show_if_on_trigger_character
+    -- local config = require('blink.cmp.config').completion.trigger
+    --
+    -- require('blink.cmp.completion.trigger').show_if_on_trigger_character = function (ctx)
+    --   zerolog.log('blink cmp trigger start')
+    --   zerolog.log(vim.json.encode({ opts = ctx, config = config }))
+    --   trigger(ctx)
+    --   zerolog.log('blink cmp trigger end')
+    -- end
+    -- require('blink.cmp.lib.event_emitter').new = require('zero.blink.event_emitter').new
+
+    -- require('blink.cmp').setup(opts)
+  -- end,
 }

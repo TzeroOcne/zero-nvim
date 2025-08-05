@@ -3,26 +3,21 @@ return {
   cmd = "Copilot",
   build = ":Copilot auth",
   event = "InsertEnter",
-  opts = {
-    suggestion = {
-      enabled = false,
-      -- enabled = not vim.g.ai_cmp,
-      -- auto_trigger = true,
-      -- hide_during_completion = false,
-      -- keymap = {
-      --   accept = "<M-l>",
-      --   accept_word = false,
-      --   accept_line = false,
-      --   next = "<M-]>",
-      --   prev = "<M-[>",
-      --   dismiss = "<C-]>",
-      -- },
-      -- keymap = {
-      --   accept = false, -- handled by nvim-cmp / blink.cmp
-      --   next = "<M-]>",
-      --   prev = "<M-[>",
-      -- },
-    },
-    panel = { enabled = false },
-  },
+  opts = function()
+    local opts = {
+      suggestion = {
+        enabled = false,
+      },
+      panel = { enabled = false },
+    }
+    local exe = vim.fn.exepath("copilot-language-server")
+    if exe ~= "" then
+      opts.server = {
+        type = "binary",
+        custom_server_filepath = exe,
+      }
+    end
+
+    return opts
+  end,
 }

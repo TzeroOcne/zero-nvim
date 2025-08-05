@@ -30,7 +30,12 @@ map({ "n", "v" }, "<leader>vm", function ()
 end, { noremap = true, silent = true })
 
 -- Buffer keymap
-map({ "n", "v" }, "<leader>bs", function () Snacks.scratch() end, { desc = 'Toggle scratch buffer' })
+map({ "n", "v" }, "<leader>bss", function () Snacks.scratch() end, { desc = 'Toggle scratch buffer' })
+map({ "n", "v" }, "<leader>bsm", function ()
+  Snacks.scratch({
+    ft = "markdown"
+  })
+end, { desc = 'Toggle scratch buffer' })
 map({ "n", "v" }, "<leader>bS", function () Snacks.scratch.select() end, { desc = 'Select scratch buffer' })
 map({ "n", "v" }, "<leader>bd", Zero.bufdelete, { desc = 'Remove buffer' })
 map({ "n", "v" }, "<leader>bo", Zero.close_all_file_buffers_non_visible, { desc = 'Remove non visible file buffer' })
@@ -88,3 +93,14 @@ map({ "n", "v" }, "<leader>hl", "$", { desc = "End of line" })
 
 -- Markdown actions
 map("x", "<leader>oc", "<Esc><cmd>silent '<,'>s/\\[ \\]/[x]/g | noh<CR>", { silent = true })
+
+-- Insert action
+map({ "n", "v" }, "<leader>io", "i<cr><esc>O", { desc = "End of line" })
+map({ "n", "v" }, "<leader>ao", "a<cr><esc>O", { desc = "End of line" })
+map({ "n", "v" }, "<leader>iO", function()
+  vim.api.nvim_buf_set_lines(0, vim.fn.line('.'), vim.fn.line('.'), false, {""})
+end, { desc = "Insert Line Below" })
+map("i", "<C-j>", function()
+  local row = vim.fn.line(".")
+  vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
+end, { desc = "Insert line below (stay in place)" })

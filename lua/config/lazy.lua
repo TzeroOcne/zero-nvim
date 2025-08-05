@@ -44,10 +44,10 @@ require("lazy").setup({
   -- checker = { enabled = true },
 })
 
-require('config.filetype')
+require('config.filetypes')
 require('config.keymaps')
-require('config.autocmd')
-require('config.command')
+require('config.autocmds')
+require('config.commands')
 
 -- Restore cursor to bar blink when exit
 vim.cmd([[
@@ -62,4 +62,4 @@ vim.cmd([[
   colorscheme tokyonight-night
 ]])
 
-require('config.highlight')
+require('config.highlights')

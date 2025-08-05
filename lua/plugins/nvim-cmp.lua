@@ -9,6 +9,7 @@ return {
     "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/cmp-buffer",
     "hrsh7th/cmp-path",
+    "hrsh7th/cmp-cmdline",
     "saadparwaiz1/cmp_luasnip",
     {
       "garymjr/nvim-snippets",
@@ -134,20 +135,22 @@ return {
           end
         end, { "i" }),
       }),
-      sources = cmp.config.sources({
-      }, {
-        { name = "snippets" },
-        -- Copilot Source
-        { name = "copilot" },
-        { name = "codeium" },
-        { name = "nvim_lsp" },
-        { name = "path" },
-        { name = "git" },
-        { name = "lazydev", group_index = 0 },
-      }, {
-        -- { name = "luasnip" },
-        { name = "buffer" },
-      }),
+      sources = cmp.config.sources(
+        {},
+        {
+          { name = "snippets" },
+          -- Copilot Source
+          { name = "copilot" },
+          { name = "codeium" },
+          { name = "nvim_lsp" },
+          { name = "path" },
+          { name = "git" },
+          { name = "lazydev", group_index = 0 },
+        }, {
+          -- { name = "luasnip" },
+          { name = "buffer" },
+        }
+      ),
       view = {
         docs = {
           auto_open = false,

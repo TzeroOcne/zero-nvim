@@ -17,3 +17,13 @@ vim.api.nvim_create_user_command('Bdf', function()
 
   Snacks.bufdelete.delete({ force = true })
 end, {})
+
+-- Reload keymaps.lua
+vim.api.nvim_create_user_command("ReloadKeymaps", function()
+  dofile(vim.fn.stdpath("config") .. "/lua/config/keymaps.lua")
+end, { desc = "Reload keymaps.lua" })
+
+-- Reload commands.lua
+vim.api.nvim_create_user_command("ReloadCommands", function()
+  dofile(vim.fn.stdpath("config") .. "/lua/config/commands.lua")
+end, { desc = "Reload commands.lua" })
