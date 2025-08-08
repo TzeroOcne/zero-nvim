@@ -35,7 +35,7 @@ map({ "n", "v" }, "<leader>bsm", function ()
   Snacks.scratch({
     ft = "markdown"
   })
-end, { desc = 'Toggle scratch buffer' })
+end, { desc = 'Toggle markdown scratch buffer' })
 map({ "n", "v" }, "<leader>bS", function () Snacks.scratch.select() end, { desc = 'Select scratch buffer' })
 map({ "n", "v" }, "<leader>bd", Zero.bufdelete, { desc = 'Remove buffer' })
 map({ "n", "v" }, "<leader>bo", Zero.close_all_file_buffers_non_visible, { desc = 'Remove non visible file buffer' })
