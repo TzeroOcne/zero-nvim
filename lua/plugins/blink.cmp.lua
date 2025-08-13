@@ -4,7 +4,6 @@ local highlight_map = {
   copilot = "ZeroCopilot",
 }
 local cmp_icon = require('zero.config').icons.cmp
-local zerolog = require('zero.log')
 local max_label_width = 60
 
 return {
@@ -15,6 +14,27 @@ return {
   -- optional: provides snippets for the snippet source
   dependencies = {
     "rafamadriz/friendly-snippets",
+    -- {
+    --   "L3MON4D3/LuaSnip",
+    --   version = "2.*",
+    --   dependencies = { "rafamadriz/friendly-snippets" },
+    --   opts = function(_, opts)
+    --     require('luasnip.loaders.from_vscode').lazy_load()
+    --     require('luasnip.loaders.from_vscode').lazy_load({
+    --       paths = {
+    --         -- Use the following paths to load snippets from your config directory
+    --         -- or any other directory you prefer.
+    --         -- You can also use `vim.fn.stdpath('config')` to get the config path.
+    --         vim.fn.stdpath('config') .. '/snippets',
+    --         vim.fn.stdpath('config') .. '/.local/snippets',
+    --       },
+    --     })
+    --     require('luasnip').filetype_extend('typescriptreact', { 'html' })
+    --     require('luasnip').filetype_extend('tsx', { 'html' })
+    --
+    --     return opts
+    --   end,
+    -- },
     "giuxtaposition/blink-cmp-copilot",
     -- "fang2hou/blink-copilot",
     {
@@ -240,11 +260,21 @@ return {
         },
         dadbod = { name = "dadbod", module = "vim_dadbod_completion.blink" },
         snippets = {
+          ---@type blink.cmp.SnippetsOpts
           opts = {
             search_paths = {
               vim.fn.stdpath('config') .. '/snippets',
               vim.fn.stdpath('config') .. '/.local/snippets',
             },
+            extended_filetypes = {
+              jsx = { 'html', 'typescriptreact' },
+            },
+            get_filetype = function ()
+              if require('zero.treesitter').in_jsx_context() then
+                return "jsx"
+              end
+              return vim.bo.filetype
+            end,
           },
         },
       },
@@ -271,6 +301,14 @@ return {
       keymap = {
         ['<C-l>'] = { 'accept' },
       },
+    },
+
+    snippets = {
+    --   preset = 'luasnip',
+      -- active = function (snippet)
+      --   vim.print({ snippet = snippet })
+      --   return vim.snippet.active(snippet)
+      -- end
     },
   },
   opts_extend = { "sources.default" },
