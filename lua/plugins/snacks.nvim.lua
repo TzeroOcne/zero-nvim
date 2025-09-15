@@ -175,7 +175,8 @@ return {
       { '<leader>fs', function () Snacks.picker.lsp_symbols() end, desc = 'Find LSP Symbols' },
       { '<leader>fS', function () Snacks.picker.lsp_symbols() end, desc = 'Find LSP Workspace Symbols' },
       -- LSP
-      { '<leader>ld', function () Snacks.picker.lsp_definitions({ confirm = smart_lsp_confirm }) end, desc = 'Find definition' },
+      { '<leader>ldd', function () Snacks.picker.lsp_definitions() end, desc = 'Find definition' },
+      { '<leader>ldj', function () Snacks.picker.lsp_definitions({ confirm = smart_lsp_confirm }) end, desc = 'Find definition (smart)' },
       { '<leader>lr', function () Snacks.picker.lsp_references({ confirm = smart_lsp_confirm }) end, desc = 'Find references' },
       -- Explorer
       { '<leader>ee', function () Snacks.explorer({ auto_close = true }) end, desc = 'View Explorer' },
