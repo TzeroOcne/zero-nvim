@@ -267,4 +267,11 @@ function M.enable_blink()
     -- and M.is_godot_project()
 end
 
+function M.is_tailwind_project()
+  local cwd = vim.fn.getcwd()
+  local has_config = require("lspconfig.util").root_pattern("tailwind.config.js")(cwd)
+  local has_module = vim.fn.isdirectory(cwd .. "/node_modules/tailwindcss") == 1
+  return has_config or has_module
+end
+
 return M

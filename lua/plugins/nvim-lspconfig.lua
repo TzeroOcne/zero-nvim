@@ -1,7 +1,29 @@
 local tailwindlsp_opts = {
   servers = {
+    svelte = {
+      settings = {
+        css = {
+          validate = true,
+          lint = {
+            unknownAtRules = "ignore",
+          },
+        },
+      },
+    },
     tailwindcss = {
       settings = {
+        css = {
+          validate = true,
+          lint = {
+            unknownAtRules = "ignore",
+          },
+        },
+        scss = {
+          validate = true,
+          lint = {
+            unknownAtRules = "ignore",
+          },
+        },
         tailwindCSS = {
           lint = {
             invalidApply = false,
@@ -48,19 +70,29 @@ return {
   "neovim/nvim-lspconfig",
   dependencies = {
     {
-      "mason.nvim",
-      opts = { ensure_installed = { "sqlfluff" } },
+      "mason-org/mason.nvim",
+      -- opts = {}
     },
-    { "williamboman/mason-lspconfig.nvim", config = function() end },
+    {
+      "mason-org/mason-lspconfig.nvim",
+      version = "v1.x",
+    },
     "hrsh7th/cmp-nvim-lsp",
+    { "Hoffs/omnisharp-extended-lsp.nvim", lazy = true },
   },
   config = function()
     -- https://github.com/nvim-lua/kickstart.nvim/blob/186018483039b20dc39d7991e4fb28090dd4750e/init.lua#L559
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+    -- local capabilities = vim.lsp.protocol.make_client_capabilities()
+    -- capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+
+    -- https://github.com/nvim-lua/kickstart.nvim/blob/3338d3920620861f8313a2745fd5d2be39f39534/init.lua#L662C1-L663C1
+    local capabilities = require('blink.cmp').get_lsp_capabilities()
 
     -- https://github.com/nvim-lua/kickstart.nvim/blob/186018483039b20dc39d7991e4fb28090dd4750e/init.lua#L585
     local servers = {
+      -- sqlfluff = {},
+      -- csharpier = {},
+      -- netcoredbg = {},
       lua_ls = {
         settings = {
           Lua = {
@@ -70,16 +102,34 @@ return {
           },
         },
       },
-      zls = {},
+      zls = {
+        cmd = {
+          vim.fn.expand("$HOME/Programs/zls/$ZIG_VERSION/zls.exe"),
+        },
+      },
       ahk2 = {},
       gdscript = {},
+      omnisharp = {
+        cmd = { "omnisharp" },
+        handlers = {
+          ["textDocument/definition"] = function(...)
+            return require("omnisharp_extended").handler(...)
+          end,
+        },
+        enable_roslyn_analyzers = true,
+        organize_imports_on_format = true,
+        enable_import_completion = true,
+      },
+      gleam ={},
     }
     local ok, result = pcall(require, 'local.lspconfig')
     if ok then
       servers = vim.tbl_deep_extend('force', servers, result)
     end
 
+    -- print(vim.env.PATH)
     require('mason').setup()
+    -- print(vim.env.PATH)
 
     -- You can add other tools here that you want Mason to install
     -- for you, so that they are available from within Neovim.
@@ -101,7 +151,7 @@ return {
       end)
     end
     local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")(vim.fn.getcwd())
-    local is_tailwind = require("lspconfig.util").root_pattern("tailwind.config.js")(vim.fn.getcwd())
+    local is_tailwind = require('zero').is_tailwind_project()
     if is_tailwind then
       servers = vim.tbl_deep_extend('force', servers, tailwindlsp_opts.servers)
     end
