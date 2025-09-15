@@ -54,6 +54,29 @@ return {
     },
     { "nvim-tree/nvim-web-devicons", opts = {} },
     "onsails/lspkind.nvim",
+    {
+      "MattiasMTS/cmp-dbee",
+      version = "ms/v2",
+      -- dependencies = {
+      --   {
+      --     "kndndrj/nvim-dbee",
+      --     dependencies = {
+      --       "MunifTanjim/nui.nvim",
+      --     },
+      --     build = function()
+      --       -- Install tries to automatically detect the install method.
+      --       -- if it fails, try calling it with one of these parameters:
+      --       --    "curl", "wget", "bitsadmin", "go"
+      --       require("dbee").install()
+      --     end,
+      --     config = function()
+      --       require("dbee").setup(--[[optional config]])
+      --     end,
+      --   }
+      -- },
+      ft = "sql", -- optional but good to have
+      opts = {}, -- needed
+    },
   },
 
   -- use a release tag to download pre-built binaries
@@ -209,7 +232,7 @@ return {
         "codeium",
       },
       per_filetype = {
-        sql = { 'snippets', 'dadbod', 'buffer' },
+        sql = { 'snippets', 'dadbod', 'buffer', 'dbee' },
       },
       -- transform_items = function (context, items)
       --   local function context()
@@ -240,7 +263,9 @@ return {
       --   end)
       --   return items
       -- end,
+      -- compat = { "cmp-dbee" },
       providers = {
+        dbee = { name = "cmp-dbee", module = "blink.compat.source" },
         copilot = {
           name = "copilot",
           module = "blink-cmp-copilot",
