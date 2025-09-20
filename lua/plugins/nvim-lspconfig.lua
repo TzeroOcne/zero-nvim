@@ -90,9 +90,13 @@ return {
 
     -- https://github.com/nvim-lua/kickstart.nvim/blob/186018483039b20dc39d7991e4fb28090dd4750e/init.lua#L585
     local servers = {
-      -- sqlfluff = {},
-      -- csharpier = {},
-      -- netcoredbg = {},
+      gopls = {
+        settings = {
+          gopls = {
+            -- buildFlags = { "-tags=air" },
+          },
+        },
+      },
       lua_ls = {
         settings = {
           Lua = {
@@ -193,7 +197,7 @@ return {
       filetypes = { "ahk", "autohotkey", "ah2" },
       init_options = {
         locale = "en-us",
-        InterpreterPath = "C:/Users/qadzi/Programs/autohotkey/2.0.2/v2/AutoHotkey64.exe",
+        InterpreterPath = vim.fn.expand("$HOME/Programs/autohotkey/2.0.2/v2/AutoHotkey64.exe"),
         -- Same as initializationOptions for Sublime Text4, convert json literal to lua dictionary literal
         AutoLibInclude = "Disabled", -- or "Local" or "User and Standard" or "All"
         CommentTags = "^;;\\s*(?<tag>.+)",
@@ -206,16 +210,16 @@ return {
         FormatOptions = {
           array_style = "none",           -- or "collapse" or "expand"
           break_chained_methods = false,
-          ignore_comment = false,
+          ignore_comment = true,
           indent_string = "\t",
           max_preserve_newlines = 2,
           brace_style = "One True Brace", -- or "Allman" or "One True Brace Variant"
           object_style = "none",          -- or "collapse" or "expand"
           preserve_newlines = true,
-          space_after_double_colon = true,
+          space_after_double_colon = false,
           space_before_conditional = true,
           space_in_empty_paren = false,
-          space_in_other = true,
+          space_in_other = false,
           space_in_paren = false,
           wrap_line_length = 0
         },

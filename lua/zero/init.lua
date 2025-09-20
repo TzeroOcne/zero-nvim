@@ -274,4 +274,14 @@ function M.is_tailwind_project()
   return has_config or has_module
 end
 
+-- Simple deterministic hash -> hex string
+function M.simple_hash(str)
+  local hash = 5381
+  for i = 1, #str do
+    hash = bit.bxor(bit.lshift(hash, 5) + hash, string.byte(str, i)) -- hash * 33 XOR char
+    hash = bit.band(hash, 0xFFFFFFFF) -- keep 32-bit
+  end
+  return string.format("%08x", hash)
+end
+
 return M
