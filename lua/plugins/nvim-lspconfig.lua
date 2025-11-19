@@ -68,6 +68,7 @@ local tailwindlsp_opts = {
 
 return {
   "neovim/nvim-lspconfig",
+  tag = "v2.5.0",
   dependencies = {
     {
       "mason-org/mason.nvim",
@@ -124,7 +125,16 @@ return {
         organize_imports_on_format = true,
         enable_import_completion = true,
       },
-      gleam ={},
+      gleam = {},
+      powershell_es = {
+        cmd = {
+          'pwsh.exe',
+          '-NoLogo',
+          '-NoProfile',
+          '-Command',
+          vim.fn.stdpath('data') .. '/mason/packages/powershell-editor-services/PowerShellEditorServices/Start-EditorServices.ps1',
+        },
+      },
     }
     local ok, result = pcall(require, 'local.lspconfig')
     if ok then

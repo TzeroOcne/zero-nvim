@@ -13,6 +13,7 @@ return {
     require("dbee").setup(
       --[[optional config]]
       {
+        default_connection = 'file_source_/0FXi40HCdS',
         result = {
           mappings = {},
         },

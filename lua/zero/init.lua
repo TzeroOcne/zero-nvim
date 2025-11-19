@@ -173,8 +173,6 @@ function M.get_char_before_cursor()
   return char_before_cursor
 end
 
-local outline = require('outline');
-
 ---Check if a buffer is a file buffer
 ---@param buf integer
 ---@return boolean
@@ -215,14 +213,20 @@ function M.get_non_visible_file_buffer_list()
   return result
 end
 
+local outline_ok, outline = pcall(require, 'outline')
+
 function M.bufdelete()
-  outline.close()
+  if outline_ok then
+    outline.close()
+  end
 
   Snacks.bufdelete.delete()
 end
 
 function M.close_all_file_buffers()
-  outline.close()
+  if outline_ok then
+    outline.close()
+  end
 
   Snacks.bufdelete.delete({
     filter = is_file_buffer,
@@ -230,11 +234,13 @@ function M.close_all_file_buffers()
 end
 
 function M.close_all_file_buffers_non_visible()
-  outline.close()
+  if outline_ok then
+    outline.close()
+  end
 
   local buffers = M.get_non_visible_file_buffer_list()
   Snacks.bufdelete.delete({
-    filter = function (buf)
+    filter = function(buf)
       return vim.tbl_contains(buffers, buf)
     end,
   })

@@ -1,4 +1,10 @@
-local ts_utils = require("nvim-treesitter.ts_utils")
+local ok, ts_utils = pcall(require, "nvim-treesitter.ts_utils")
+if not ok then
+  vim.notify("nvim-treesitter.ts_utils not found", vim.log.levels.ERROR)
+  return {
+    in_jsx_context = function () return false end,
+  }
+end
 
 local M = {}
 
