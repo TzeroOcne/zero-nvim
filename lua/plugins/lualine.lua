@@ -1,6 +1,14 @@
 return {
   'nvim-lualine/lualine.nvim',
-  dependencies = { 'nvim-tree/nvim-web-devicons' },
+  dependencies = {
+    'nvim-tree/nvim-web-devicons',
+    {
+      'linrongbin16/lsp-progress.nvim',
+      config = function()
+        require('lsp-progress').setup()
+      end
+    },
+  },
   opts = {
     options = {
       globalstatus = true,
@@ -15,6 +23,10 @@ return {
         },
       },
       lualine_x = {
+        function()
+          -- invoke `progress` here.
+          return require('lsp-progress').progress()
+        end,
         {
           function() return require("noice").api.status.mode.get() end,
           cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,

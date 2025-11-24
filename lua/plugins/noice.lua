@@ -1,8 +1,13 @@
 return {
   "folke/noice.nvim",
   event = "VeryLazy",
+  --- @module 'noice'
+  --- @type NoiceConfig
   opts = {
     lsp = {
+      progress = {
+        enabled = false,
+      },
       signature = {
         auto_open = {
           enabled = false,
