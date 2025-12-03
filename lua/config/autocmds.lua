@@ -8,6 +8,7 @@ vim.api.nvim_create_autocmd({ "VimEnter", "DirChanged" }, {
       local cwd = vim.fn.getcwd()
       local hash = zero.simple_hash(cwd)
       local pipename = "\\\\.\\pipe\\nvim-godot." .. hash
+      require('zero.pipe').kill_and_wait(pipename)
       vim.fn.serverstart(pipename)
       vim.notify("Started Godot RPC server: " .. pipename, vim.log.levels.INFO, { title = "nryy" })
 
@@ -142,4 +143,12 @@ vim.api.nvim_create_autocmd("FileType", {
       vim.bo.shiftwidth = 2
     end
   end,
+})
+
+-- listen lsp-progress event and refresh lualine
+vim.api.nvim_create_augroup("lualine_augroup", { clear = true })
+vim.api.nvim_create_autocmd("User", {
+  group = "lualine_augroup",
+  pattern = "LspProgressStatusUpdated",
+  callback = require("lualine").refresh,
 })

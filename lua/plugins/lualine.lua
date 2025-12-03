@@ -5,7 +5,10 @@ return {
     {
       'linrongbin16/lsp-progress.nvim',
       config = function()
-        require('lsp-progress').setup()
+        require('lsp-progress').setup({
+          spin_update_time = 50,
+          max_size = 50,
+        })
       end
     },
   },
