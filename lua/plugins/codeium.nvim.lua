@@ -3,7 +3,7 @@ return {
   cmd = "Codeium",
   event = "InsertEnter",
   build = ":Codeium Auth",
-  enabled = false,
+  -- enabled = false,
   opts = {
     enable_cmp_source = false, -- vim.g.ai_cmp, -- or require('zero').enable_blink(),
     virtual_text = {
@@ -19,6 +19,7 @@ return {
     require('codeium.util').get_newline = function ()
       return "\n"
     end
+    require('codeium.util').get_other_documents = require('zero.codeium').get_other_documents
     require('codeium').setup(opts)
   end,
 }

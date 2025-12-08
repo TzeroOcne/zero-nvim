@@ -43,14 +43,14 @@ return {
     },
     {
       "Exafunction/codeium.nvim",
-      dependencies = {
-        "nvim-lua/plenary.nvim",
-      },
+      -- dependencies = {
+      --   "nvim-lua/plenary.nvim",
+      -- },
       opts = { enable_cmp_source = true },
-      config = function (_, opts)
-        require('codeium.util').get_other_documents = require('zero.codeium').get_other_documents
-        require("codeium").setup(opts)
-      end,
+      -- config = function (_, opts)
+      --   require('codeium.util').get_other_documents = require('zero.codeium').get_other_documents
+      --   require("codeium").setup(opts)
+      -- end,
     },
     { "nvim-tree/nvim-web-devicons", opts = {} },
     "onsails/lspkind.nvim",
