@@ -162,7 +162,23 @@ return {
             },
           },
         },
-      }
+      },
+      taplo = {
+        settings = {
+          taplo = {
+            schema = {
+              associations = {
+                {
+                  -- Match your mise file
+                  fileMatch = { "mise.toml", ".mise.toml", "*/mise.toml" },
+                  -- Schema URL
+                  url = "https://mise.jdx.dev/schema/mise.json",
+                },
+              },
+            },
+          },
+        },
+      },
     }
     local ok, result = pcall(require, 'local.lspconfig')
     if ok then
