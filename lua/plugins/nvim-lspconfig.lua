@@ -1,3 +1,4 @@
+---@module "mason-registry"
 local tailwindlsp_opts = {
   servers = {
     svelte = {
@@ -76,10 +77,10 @@ return {
     },
     {
       "mason-org/mason-lspconfig.nvim",
-      version = "v1.x",
     },
     "hrsh7th/cmp-nvim-lsp",
     { "Hoffs/omnisharp-extended-lsp.nvim", lazy = true },
+    "b0o/schemastore.nvim",
   },
   config = function()
     -- https://github.com/nvim-lua/kickstart.nvim/blob/186018483039b20dc39d7991e4fb28090dd4750e/init.lua#L559
@@ -89,7 +90,7 @@ return {
     -- https://github.com/nvim-lua/kickstart.nvim/blob/3338d3920620861f8313a2745fd5d2be39f39534/init.lua#L662C1-L663C1
     local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-    -- https://github.com/nvim-lua/kickstart.nvim/blob/186018483039b20dc39d7991e4fb28090dd4750e/init.lua#L585
+    ---@type table<string, vim.lsp.Config>
     local servers = {
       gopls = {
         settings = {
@@ -135,6 +136,33 @@ return {
           vim.fn.stdpath('data') .. '/mason/packages/powershell-editor-services/PowerShellEditorServices/Start-EditorServices.ps1',
         },
       },
+      jsonls = {
+        settings = {
+          json = {
+            schemas = require('schemastore').json.schemas {
+            },
+            validate = { enable = true },
+          },
+        },
+      },
+      yamlls = {
+        settings = {
+          yaml = {
+            schemaStore = {
+              -- You must disable built-in schemaStore support if you want to use
+              -- this plugin and its advanced options like `ignore`.
+              enable = false,
+              -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+              url = "",
+            },
+            schemas = require('schemastore').yaml.schemas {
+              select = {
+                'mise',
+              },
+            },
+          },
+        },
+      }
     }
     local ok, result = pcall(require, 'local.lspconfig')
     if ok then
@@ -147,10 +175,21 @@ return {
 
     -- You can add other tools here that you want Mason to install
     -- for you, so that they are available from within Neovim.
-    local ensure_installed = vim.tbl_keys(servers or {})
-    vim.list_extend(ensure_installed, {
-      'stylua', -- Used to format Lua code
-    })
+    ---@type string[]
+    local ensure_installed = vim.tbl_keys(servers)
+    ensure_installed = vim.tbl_filter(
+      function(server_name)
+        return not vim.list_contains(
+          {
+            "gleam",
+            "gdscript",
+            "ahk2",
+          },
+          server_name
+        )
+      end,
+      ensure_installed
+    )
 
     local zero_lsp = require('zero.lsp')
 
@@ -169,29 +208,28 @@ return {
     if is_tailwind then
       servers = vim.tbl_deep_extend('force', servers, tailwindlsp_opts.servers)
     end
-
-    require('mason-lspconfig').setup {
-      handlers = {
-        function(server_name)
-          if server_name == 'denols' or server_name == 'vtsls' then
-            if not is_deno then
-              if server_name == 'denols' then
-                return
-              end
-            else
-              if server_name == 'vtsls' then
-                return
-              end
+    local mason_exclude = vim.tbl_keys(servers)
+    mason_exclude = vim.tbl_filter(
+      function(server_name)
+        if server_name == 'denols' or server_name == 'vtsls' then
+          if not is_deno then
+            if server_name == 'denols' then
+              return true
+            end
+          else
+            if server_name == 'vtsls' then
+              return true
             end
           end
-          local server = servers[server_name] or {}
-          -- This handles overriding only values explicitly passed
-          -- by the server configuration above. Useful when disabling
-          -- certain features of an LSP (for example, turning off formatting for tsserver)
-          server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-          servers[server_name] = server
-        end,
-      },
+        end
+        return false
+      end,
+      mason_exclude
+    )
+
+    require('mason-lspconfig').setup {
+      ensure_installed = ensure_installed,
+      automatic_enable = { exclude = mason_exclude },
     }
 
     local configs = require "lspconfig.configs"
@@ -243,7 +281,7 @@ return {
     configs["ahk2"] = { default_config = ahk2_configs }
 
     for server_name, settings in pairs(servers) do
-      require("lspconfig")[server_name].setup(settings)
+      vim.lsp.config(server_name, settings)
     end
   end,
 }
