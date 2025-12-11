@@ -185,9 +185,8 @@ return {
       servers = vim.tbl_deep_extend('force', servers, result)
     end
 
-    -- print(vim.env.PATH)
     require('mason').setup()
-    -- print(vim.env.PATH)
+    local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")(vim.fn.getcwd())
 
     -- You can add other tools here that you want Mason to install
     -- for you, so that they are available from within Neovim.
@@ -195,6 +194,17 @@ return {
     local ensure_installed = vim.tbl_keys(servers)
     ensure_installed = vim.tbl_filter(
       function(server_name)
+        if server_name == 'denols' or server_name == 'vtsls' then
+          if is_deno then
+            if server_name == 'denols' then
+              return true
+            end
+          else
+            if server_name == 'vtsls' then
+              return true
+            end
+          end
+        end
         return not vim.list_contains(
           {
             "gleam",
@@ -208,18 +218,6 @@ return {
     )
 
     local zero_lsp = require('zero.lsp')
-
-    if zero_lsp.is_enabled("denols") and zero_lsp.is_enabled("vtsls") then
-      local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
-      zero_lsp.disable("vtsls", is_deno)
-      zero_lsp.disable("denols", function(root_dir, config)
-        if not is_deno(root_dir) then
-          config.settings.deno.enable = false
-        end
-        return false
-      end)
-    end
-    local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")(vim.fn.getcwd())
     local is_tailwind = require('zero').is_tailwind_project()
     if is_tailwind then
       servers = vim.tbl_deep_extend('force', servers, tailwindlsp_opts.servers)
@@ -298,6 +296,14 @@ return {
 
     for server_name, settings in pairs(servers) do
       vim.lsp.config(server_name, settings)
+    end
+
+    if vim.lsp.is_enabled("denols") and vim.lsp.is_enabled("vtsls") then
+      if is_deno then
+        vim.lsp.enable("vtsls", false)
+      else
+        vim.lsp.enable("denols", false)
+      end
     end
   end,
 }
