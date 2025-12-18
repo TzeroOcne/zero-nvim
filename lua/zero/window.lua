@@ -15,7 +15,8 @@ end
 ---@param win integer Window handle.
 ---@return boolean is_file_window `true` if the window is a normal file buffer, `false` otherwise.
 function M.is_file_window(win)
-  return M.get_win_buftype(win) == '' -- '' means normal file buffer
+  local cfg = vim.api.nvim_win_get_config(win)
+  return cfg.relative == "" and M.get_win_buftype(win) == '' -- '' means normal file buffer
 end
 
 ---Get all normal file buffer windows in a tabpage.
