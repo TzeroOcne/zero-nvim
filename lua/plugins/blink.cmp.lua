@@ -5,6 +5,19 @@ local highlight_map = {
 }
 local cmp_icon = require('zero.config').icons.cmp
 local max_label_width = 60
+local wp = require('zero.workspace')
+local codeium_enabled = wp.get('codeium', true)
+local sources_default = {
+  "snippets",
+  "lsp",
+  "path",
+  "buffer",
+  "copilot",
+  -- "codeium",
+}
+if codeium_enabled then
+  sources_default[#sources_default + 1] = "codeium"
+end
 
 return {
   'saghen/blink.cmp',
@@ -43,6 +56,7 @@ return {
     },
     {
       "Exafunction/codeium.nvim",
+      enabled = codeium_enabled,
       -- dependencies = {
       --   "nvim-lua/plenary.nvim",
       -- },
@@ -223,14 +237,7 @@ return {
     -- Default list of enabled providers defined so that you can extend it
     -- elsewhere in your config, without redefining it, due to `opts_extend`
     sources = {
-      default = {
-        "snippets",
-        "lsp",
-        "path",
-        "buffer",
-        "copilot",
-        "codeium",
-      },
+      default = sources_default,
       per_filetype = {
         sql = { 'snippets', 'dadbod', 'buffer', 'dbee' },
       },
@@ -275,7 +282,7 @@ return {
         },
         codeium = {
           name = "codeium",
-          enabled = function ()
+          enabled = codeium_enabled and function ()
             return vim.bo.filetype ~= 'DressingInput'
           end,
           module = "codeium.blink",
