@@ -89,14 +89,51 @@ return {
 
     -- https://github.com/nvim-lua/kickstart.nvim/blob/3338d3920620861f8313a2745fd5d2be39f39534/init.lua#L662C1-L663C1
     local capabilities = require('blink.cmp').get_lsp_capabilities()
+    local mason_path = vim.fn.expand("$LOCALAPPDATA/nvim-data/mason/packages")
 
     ---@type table<string, vim.lsp.Config>
     local servers = {
+      -- Bypaass cmd
+      vtsls = {
+        cmd = {
+          "node",
+          mason_path .. "/vtsls/node_modules/@vtsls/language-server/bin/vtsls.js",
+          "--stdio",
+        },
+        init_options = {
+          disableAutomaticTypingAcquisition = true,
+        },
+        settings = {
+          typescript = {
+            preferences = {
+              includePackageJsonAutoImports = "off",
+            },
+          },
+          javascript = {
+            preferences = {
+              includePackageJsonAutoImports = "off",
+            },
+          },
+        },
+      },
+      eslint = {
+        cmd = {
+          "node",
+          mason_path .. "/eslint-lsp/node_modules/vscode-langservers-extracted/bin/vscode-eslint-language-server",
+          "--stdio",
+        },
+      },
+      tailwindcss = {
+        cmd = {
+          "node",
+          mason_path .. "/tailwindcss-language-server/node_modules/@tailwindcss/language-server/bin/tailwindcss-language-server",
+          "--stdio",
+        },
+      },
+
       gopls = {
         settings = {
-          gopls = {
-            -- buildFlags = { "-tags=air" },
-          },
+          gopls = {},
         },
       },
       lua_ls = {
@@ -186,7 +223,7 @@ return {
     end
 
     require('mason').setup()
-    local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")(vim.fn.getcwd())
+    local is_deno = require('zero.workspace').is_deno()
 
     -- You can add other tools here that you want Mason to install
     -- for you, so that they are available from within Neovim.
@@ -217,8 +254,8 @@ return {
       ensure_installed
     )
 
-    local zero_lsp = require('zero.lsp')
     local is_tailwind = require('zero').is_tailwind_project()
+    local is_obsidian = require('zero').is_obsidian_project()
     if is_tailwind then
       servers = vim.tbl_deep_extend('force', servers, tailwindlsp_opts.servers)
     end
@@ -297,6 +334,15 @@ return {
     for server_name, settings in pairs(servers) do
       vim.lsp.config(server_name, settings)
     end
+
+    -- vim.lsp.enable('eslint', false)
+    -- vim.lsp.enable('tailwindcss', false)
+    -- vim.lsp.enable('vtsls', false)
+
+    if not is_obsidian then
+      vim.lsp.enable('obsidian-ls', false)
+    end
+
 
     if vim.lsp.is_enabled("denols") and vim.lsp.is_enabled("vtsls") then
       if is_deno then

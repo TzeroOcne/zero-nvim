@@ -62,5 +62,15 @@ function M.get(key, default)
   return default ~= nil and default or nil
 end
 
+function M.is_deno()
+  if require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")(vim.fn.getcwd()) then
+    return true
+  end
+  if require('zero.workspace').get('deno', false) then
+    return true
+  end
+  return false
+end
+
 return M
 
