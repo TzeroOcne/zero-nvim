@@ -170,14 +170,16 @@ return {
       { '<leader>ff', function () Snacks.picker.files() end, desc = 'Find file' },
       { '<leader>fg', function () Snacks.picker.git_files() end, desc = 'Find git files' },
       { '<leader>fh', function () Snacks.picker.files({ hidden = true }) end, desc = 'Find hidden files' },
-      { '<leader>fb', function () Snacks.picker.buffers({ confirm = smart_buffer_confirm }) end, desc = 'Find buffers' },
+      { '<leader>fbb', function () Snacks.picker.buffers() end, desc = 'Find buffers' },
+      { '<leader>fbj', function () Snacks.picker.buffers({ confirm = smart_buffer_confirm }) end, desc = 'Find buffers (smart)' },
       { '<leader>fm', function () Snacks.picker.marks() end, desc = 'Find marks' },
       { '<leader>fs', function () Snacks.picker.lsp_symbols() end, desc = 'Find LSP Symbols' },
       { '<leader>fS', function () Snacks.picker.lsp_symbols() end, desc = 'Find LSP Workspace Symbols' },
       -- LSP
       { '<leader>ldd', function () Snacks.picker.lsp_definitions() end, desc = 'Find definition' },
       { '<leader>ldj', function () Snacks.picker.lsp_definitions({ confirm = smart_lsp_confirm }) end, desc = 'Find definition (smart)' },
-      { '<leader>lr', function () Snacks.picker.lsp_references({ confirm = smart_lsp_confirm }) end, desc = 'Find references' },
+      { '<leader>lrr', function () Snacks.picker.lsp_references() end, desc = 'Find references' },
+      { '<leader>lrj', function () Snacks.picker.lsp_references({ confirm = smart_lsp_confirm }) end, desc = 'Find references (smart)' },
       -- Explorer
       { '<leader>ee', function () Snacks.explorer({ auto_close = true }) end, desc = 'View Explorer' },
       { '<leader>eo', function () Snacks.explorer.open() end, desc = 'Open Explorer' },
