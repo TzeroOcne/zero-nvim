@@ -1,5 +1,6 @@
 return {
   "zbirenbaum/copilot.lua",
+  enabled = false,
   cmd = "Copilot",
   build = ":Copilot auth",
   event = "InsertEnter",
@@ -9,6 +10,9 @@ return {
         enabled = false,
       },
       panel = { enabled = false },
+      filetypes = {
+        yaml = true,
+      },
     }
     local exe = vim.fn.exepath("copilot-language-server")
     if exe ~= "" then
