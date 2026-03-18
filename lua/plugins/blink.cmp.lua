@@ -48,8 +48,8 @@ return {
     --     return opts
     --   end,
     -- },
-    "giuxtaposition/blink-cmp-copilot",
-    -- "fang2hou/blink-copilot",
+    -- "giuxtaposition/blink-cmp-copilot",
+    "fang2hou/blink-copilot",
     {
       "saghen/blink.compat",
       opts = { enable_events = true },
@@ -275,8 +275,8 @@ return {
         dbee = { name = "cmp-dbee", module = "blink.compat.source" },
         copilot = {
           name = "copilot",
-          module = "blink-cmp-copilot",
-          -- module = "blink-copilot",
+          -- module = "blink-cmp-copilot",
+          module = "blink-copilot",
           score_offset = 200,
           async = true,
         },
