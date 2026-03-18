@@ -195,6 +195,7 @@ return {
             schemas = require('schemastore').yaml.schemas {
               select = {
                 'mise',
+                'openapi.json',
               },
             },
           },
@@ -216,6 +217,7 @@ return {
           },
         },
       },
+      copilot = { enabled = true },
     }
     local ok, result = pcall(require, 'local.lspconfig')
     if ok then
@@ -256,6 +258,7 @@ return {
 
     local is_tailwind = require('zero').is_tailwind_project()
     local is_obsidian = require('zero').is_obsidian_project()
+    local use_nvim_eslint = require('zero.workspace').use_nvim_eslint()
     if is_tailwind then
       servers = vim.tbl_deep_extend('force', servers, tailwindlsp_opts.servers)
     end
@@ -272,6 +275,12 @@ return {
               return true
             end
           end
+        end
+        if is_obsidian and server_name == 'obsidian-ls' then
+          return true
+        end
+        if server_name == 'eslint' and use_nvim_eslint then
+          return true
         end
         return false
       end,
@@ -339,9 +348,9 @@ return {
     -- vim.lsp.enable('tailwindcss', false)
     -- vim.lsp.enable('vtsls', false)
 
-    if not is_obsidian then
-      vim.lsp.enable('obsidian-ls', false)
-    end
+    -- if not is_obsidian then
+    --   vim.lsp.enable('obsidian-ls', false)
+    -- end
 
 
     if vim.lsp.is_enabled("denols") and vim.lsp.is_enabled("vtsls") then
