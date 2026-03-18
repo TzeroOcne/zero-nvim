@@ -72,5 +72,9 @@ function M.is_deno()
   return false
 end
 
+function M.use_nvim_eslint()
+  return M.get('nvim-eslint', false)
+end
+
 return M
 
