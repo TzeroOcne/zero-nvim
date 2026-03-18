@@ -1,8 +1,8 @@
 return {
   "obsidian-nvim/obsidian.nvim",
   -- commit = "3c967d0",
-  -- tag = "v3.13.x",
-  -- version = "v3.13.x",
+  -- tag = "~v3.14.7",
+  -- version = "3.15.0",
   lazy = true,
   ft = "markdown",
   -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
@@ -81,17 +81,6 @@ return {
         -- Trigger completion at 2 chars.
         min_chars = 2,
       },
-
-      -- Optional, by default when you use `:ObsidianFollowLink` on a link to an external
-      -- URL it will be ignored but you can customize this behavior here.
-      ---@param url string
-      follow_url_func = function(url)
-        -- Open the URL in the default web browser.
-        -- vim.fn.jobstart({"open", url})  -- Mac OS
-        -- vim.fn.jobstart({"xdg-open", url})  -- linux
-        -- vim.cmd(':silent exec "!start ' .. url .. '"') -- Windows
-        vim.ui.open(url) -- need Neovim 0.10.0+
-      end,
     }
   end,
   setup = function (_, opts)
