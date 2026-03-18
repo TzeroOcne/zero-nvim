@@ -92,7 +92,10 @@ map({ "n", "v" }, "<leader>hh", "^", { desc = "Start of line" })
 map({ "n", "v" }, "<leader>hl", "$", { desc = "End of line" })
 
 -- Markdown actions
-map("x", "<leader>oc", "<Esc><cmd>silent '<,'>s/\\[ \\]/[x]/g | noh<CR>", { silent = true })
+map("x", "<leader>oc",
+  "<Esc><cmd>silent '<,'>s/\\[\\([ x]\\)\\]/\\=submatch(1)==' ' ? '[x]' : '[ ]'/g | noh<CR>",
+  { silent = true }
+)
 
 -- Insert action
 map({ "n", "v" }, "<leader>io", "i<cr><esc>O", { desc = "End of line" })
