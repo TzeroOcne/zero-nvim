@@ -28,6 +28,9 @@ map({ "n", "v" }, "<leader>vm", function ()
 
   vim.api.nvim_win_set_cursor(0, {line, middle_column})
 end, { noremap = true, silent = true })
+map("n", "<leader>zh", function()
+  vim.fn.winrestview({ leftcol = 0 })
+end, { desc = "Scroll viewport to far left" })
 
 -- Buffer keymap
 map({ "n", "v" }, "<leader>bss", function () Snacks.scratch() end, { desc = 'Toggle scratch buffer' })
