@@ -152,3 +152,17 @@ vim.api.nvim_create_autocmd("User", {
   pattern = "LspProgressStatusUpdated",
   callback = require("lualine").refresh,
 })
+
+-- set fileformat to unix for temp msg*.md files
+vim.api.nvim_create_autocmd("BufReadPre", {
+  pattern = "*.md",
+  callback = function()
+    local temp = vim.fn.expand("$TEMP")
+    if temp == "" then return end
+    local path = vim.api.nvim_buf_get_name(0)
+    local filename = vim.fn.fnamemodify(path, ":t")
+    if path:sub(1, #temp):lower() == temp:lower() and filename:sub(1, 3) == "msg" then
+      vim.bo.fileformat = "unix"
+    end
+  end,
+})
