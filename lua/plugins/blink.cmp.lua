@@ -3,10 +3,18 @@ local highlight_map = {
   codeium = "ZeroCodeium",
   copilot = "ZeroCopilot",
 }
-local cmp_icon = require('zero.config').icons.cmp
+
+-- vim.print(require('zero'))
+
+-- local has_zero, zero = pcall(require, 'zero')
+
+local cmp_icon = require('zero.config').icons.cmp or {}
 local max_label_width = 60
-local wp = require('zero.workspace')
-local codeium_enabled = wp.get('codeium', true)
+
+local wp = require('zero.workspace') or nil
+-- local codeium_enabled = wp and wp.get('codeium', true) or false
+local codeium_enabled = false
+
 local sources_default = {
   "snippets",
   "lsp",
@@ -15,14 +23,18 @@ local sources_default = {
   "copilot",
   -- "codeium",
 }
+
 if codeium_enabled then
   sources_default[#sources_default + 1] = "codeium"
 end
 
 return {
   'saghen/blink.cmp',
+
   enabled = function()
-    return require('zero').enable_blink()
+    -- return has_zero and zero.enable_blink()
+    local ok, zero = pcall(require, 'zero')
+    return ok and zero.enable_blink()
   end,
   -- optional: provides snippets for the snippet source
   dependencies = {

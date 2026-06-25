@@ -2,7 +2,8 @@ return {
   "hrsh7th/nvim-cmp",
   version = false, -- last release is way too old
   enabled = function()
-    return not require('zero').enable_blink()
+    local ok, zero = pcall(require, 'zero')
+    return not (ok and zero.enable_blink())
   end,
   event = "InsertEnter",
   dependencies = {

@@ -1,8 +1,9 @@
-local enabled = require('zero.workspace').get('codeium', true)
-
 return {
   "Exafunction/windsurf.nvim",
-  enabled = enabled,
+  enabled = function ()
+    return false
+    -- return require('zero.workspace').get('codeium', true)
+  end,
   cmd = "Codeium",
   event = "InsertEnter",
   build = ":Codeium Auth",
