@@ -31,6 +31,15 @@ vim.o.signcolumn = 'yes'
 vim.o.splitright = true
 vim.o.splitbelow = true
 
+vim.opt.errorbells = false
+vim.opt.visualbell = false
+vim.opt.belloff = "all"
+
+vim.o.shell = "cmd.exe"
+vim.o.shellcmdflag = "/c"
+vim.o.shellquote = "\""
+vim.o.shellxquote = ""
+
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
