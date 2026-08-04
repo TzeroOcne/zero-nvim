@@ -1,16 +1,17 @@
 return {
   "obsidian-nvim/obsidian.nvim",
+  enabled = require('zero').is_obsidian_project(),
   -- commit = "3c967d0",
   -- tag = "~v3.14.7",
   -- version = "3.15.0",
-  lazy = true,
-  event = function()
-    if require("zero").is_obsidian_project() then
-      return { "VimEnter", "BufReadPre", "BufNewFile" }
-    end
-
-    return {}
-  end,
+  lazy = false,
+  -- event = function()
+  --   if require("zero").is_obsidian_project() then
+  --     return { "VimEnter", "BufReadPre", "BufNewFile" }
+  --   end
+  --
+  --   return {}
+  -- end,
   dependencies = {
     -- Required.
     "nvim-lua/plenary.nvim",
