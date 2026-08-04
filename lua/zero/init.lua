@@ -1,5 +1,8 @@
+-- @NOTE: This file must stay free of third-party dependencies (no require('snacks'), etc.)
+--         so require('zero') is always safe to call without waiting for plugins to load.
+--         Code that depends on plugins (Snacks, outline, etc.) lives in separate files
+--         under lua/zero/ (e.g., terminal.lua, buffer.lua).
 local M = {}
-local Snacks = require('snacks')
 
 ---@param name string
 function M.get_plugin(name)
@@ -20,34 +23,6 @@ function M.has_zsh()
   return vim.fn.executable("zsh.exe") == 1
 end
 
-local terminals = {}
-
-function M.get_terminal_windows()
-  ---@type integer[]
-  local terminal_windows = {}
-
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local buf = vim.api.nvim_win_get_buf(win)
-    local buftype = vim.api.nvim_get_option_value('buftype', { buf = buf })
-    if buftype == 'terminal' then
-      table.insert(terminal_windows, win)
-    end
-  end
-
-  return terminal_windows
-end
-
-function M.close_open_terminal_buffer()
-  local window_list = M.get_terminal_windows()
-  if #window_list > 0 then
-    for _, win in ipairs(window_list) do
-      vim.api.nvim_win_close(win, true)
-    end
-    return true
-  end
-  return false
-end
-
 function M.get_zsh()
   return M.has_zsh() and "zsh.exe" or nil
 end
@@ -59,41 +34,6 @@ end
 
 function M.get_terminal()
   return M.get_msys() or M.get_zsh() or 'pwsh'
-end
-
--- Opens a floating terminal (interactive by default)
----@param cmd? string | string[]
----@param opts? snacks.terminal.Opts| {create?: boolean}
-function M.terminal (cmd, opts)
-  opts = opts or {}
-  local id = vim.inspect({ cmd = cmd, cwd = opts.cwd, env = opts.env, count = vim.v.count1 })
-  local terminal = Snacks.terminal(cmd, opts)
-  terminals[id] = terminal
-  return terminal
-end
-
----@return string[]
-function M.get_terminal_list()
-  return vim.tbl_map(
-    ---comment
-    ---@param value string
-    function (value)
-      return load('return ' .. value)().cmd
-    end,
-    vim.tbl_keys(terminals)
-  )
-end
-
-function M.select_terminal()
-  return vim.ui.select(
-    M.get_terminal_list(),
-    {},
-    function (choice)
-      if choice then
-        M.terminal(choice)
-      end
-    end
-  )
 end
 
 ---@class JSONContext
@@ -211,39 +151,6 @@ function M.get_non_visible_file_buffer_list()
     end
   end
   return result
-end
-
-local outline_ok, outline = pcall(require, 'outline')
-
-function M.bufdelete()
-  if outline_ok then
-    outline.close()
-  end
-
-  Snacks.bufdelete.delete()
-end
-
-function M.close_all_file_buffers()
-  if outline_ok then
-    outline.close()
-  end
-
-  Snacks.bufdelete.delete({
-    filter = is_file_buffer,
-  })
-end
-
-function M.close_all_file_buffers_non_visible()
-  if outline_ok then
-    outline.close()
-  end
-
-  local buffers = M.get_non_visible_file_buffer_list()
-  Snacks.bufdelete.delete({
-    filter = function(buf)
-      return vim.tbl_contains(buffers, buf)
-    end,
-  })
 end
 
 function M.get_line_last_char()
