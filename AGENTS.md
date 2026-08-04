@@ -19,7 +19,9 @@ The config is named "zero-nvim" and sometimes uses `nryy` as an internal namespa
 │   │   └── highlights.lua      # Custom highlight groups (ZeroAI, ZeroCopilot, etc.)
 │   ├── plugins/*.lua           # Each file = one lazy.nvim plugin spec
 │   └── zero/                   # Core utility library ("zero" namespace)
-│       ├── init.lua            # Terminal mgmt, buffer ops, project detection, JSON, pipe I/O
+│       ├── init.lua            # Project detection, JSON, pipe I/O, shell detection (no third-party deps!)
+│       ├── terminal.lua        # Snacks-based terminal management (requires snacks.nvim)
+│       ├── buffer.lua          # Buffer delete ops (requires snacks.nvim + outline.nvim)
 │       ├── config.lua          # Icon definitions for cmp, diagnostics, git, DAP, etc.
 │       ├── log.lua             # File-based logger (writes to nvim-data/nryy.log, gated by vim.g.zerolog)
 │       ├── window.lua          # Window/buffer type helpers

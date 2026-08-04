@@ -1,4 +1,6 @@
 local Zero = require('zero')
+local ZeroTerm = require('zero.terminal')
+local ZeroBuf = require('zero.buffer')
 local ZeroLsp = require('zero.lsp')
 local map = vim.keymap.set;
 local Snacks = require('snacks')
@@ -32,6 +34,28 @@ map("n", "<leader>zh", function()
   vim.fn.winrestview({ leftcol = 0 })
 end, { desc = "Scroll viewport to far left" })
 
+-- Yank / Clipboard
+-- map("v", "<C-c>", '"+y', { desc = "Yank visual to clipboard" })
+local function yank(text, message)
+  vim.fn.setreg("+", text)
+  vim.notify(message)
+end
+
+map("n", "<leader>yp", function()
+  local file = vim.api.nvim_buf_get_name(0)
+  yank(file, "Copied absolute path")
+end, { desc = "Yank absolute path" })
+
+map("n", "<leader>yr", function()
+  local file = vim.api.nvim_buf_get_name(0)
+  yank(vim.fs.relpath(vim.uv.cwd(), file) or file, "Copied relative path")
+end, { desc = "Yank relative path" })
+
+map("n", "<leader>yf", function()
+  local file = vim.api.nvim_buf_get_name(0)
+  yank(vim.fs.basename(file), "Copied filename")
+end, { desc = "Yank filename" })
+
 -- Buffer keymap
 map({ "n", "v" }, "<leader>bss", function () Snacks.scratch() end, { desc = 'Toggle scratch buffer' })
 map({ "n", "v" }, "<leader>bsm", function ()
@@ -40,9 +64,9 @@ map({ "n", "v" }, "<leader>bsm", function ()
   })
 end, { desc = 'Toggle markdown scratch buffer' })
 map({ "n", "v" }, "<leader>bS", function () Snacks.scratch.select() end, { desc = 'Select scratch buffer' })
-map({ "n", "v" }, "<leader>bd", Zero.bufdelete, { desc = 'Remove buffer' })
-map({ "n", "v" }, "<leader>bo", Zero.close_all_file_buffers_non_visible, { desc = 'Remove non visible file buffer' })
-map({ "n", "v" }, "<leader>bx", Zero.close_all_file_buffers, { desc = 'Remove file buffer' })
+map({ "n", "v" }, "<leader>bd", ZeroBuf.bufdelete, { desc = 'Remove buffer' })
+map({ "n", "v" }, "<leader>bo", ZeroBuf.close_all_file_buffers_non_visible, { desc = 'Remove non visible file buffer' })
+map({ "n", "v" }, "<leader>bx", ZeroBuf.close_all_file_buffers, { desc = 'Remove file buffer' })
 
 -- tabs
 map("n", "<leader><tab>l", "<cmd>tablast<cr>", { desc = "Last Tab" })
@@ -59,13 +83,13 @@ map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
 ---@return function
 local function zeroterm(cmd)
   return function ()
-    if not Zero.close_open_terminal_buffer() then
-      Zero.terminal(cmd or Zero.get_terminal())
+    if not ZeroTerm.close_open_terminal_buffer() then
+      ZeroTerm.terminal(cmd or Zero.get_terminal())
     end
   end
 end
 map({ 't' }, '<esc><esc>', '<C-\\><C-n>', { noremap = true, silent = true, desc = 'Enter normal mode' })
-map({ "n", "v" }, "<leader>tt", Zero.select_terminal, { noremap = true, silent = true, desc = 'Select terminal' })
+map({ "n", "v" }, "<leader>tt", ZeroTerm.select_terminal, { noremap = true, silent = true, desc = 'Select terminal' })
 map({ "n", "v" }, "<leader>tg", function () Snacks.lazygit() end, { noremap = true, silent = true, desc = 'Lazygit' })
 map({ "n", "v" }, "<C-_>", zeroterm(), { noremap = true, silent = true, desc = 'Toggle terminal' })
 map({ 't' }, "<C-_>", '<cmd>close<cr>', { noremap = true, silent = true, desc = 'Toggle terminal' })
