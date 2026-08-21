@@ -21,6 +21,12 @@ return {
       lualine_b = {'branch', 'diff', 'diagnostics'},
       lualine_c = {
         {
+          function()
+            return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+          end,
+          icon = '',
+        },
+        {
           'filename',
           path = 1,
         },
