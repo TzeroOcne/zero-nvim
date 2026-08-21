@@ -1,6 +1,7 @@
 return {
   "obsidian-nvim/obsidian.nvim",
   enabled = require('zero').is_obsidian_project(),
+  -- enabled = false,
   -- commit = "3c967d0",
   -- tag = "~v3.14.7",
   -- version = "3.15.0",
@@ -31,15 +32,15 @@ return {
         expr = true,
         buffer = true,
       },
-      -- Toggle check-boxes.
-      {
-        "<leader>oc",
-        function()
-          return require("obsidian").util.toggle_checkbox()
-        end,
-        desc = "Interact Check",
-        buffer = true,
-      },
+      -- -- Toggle check-boxes.
+      -- {
+      --   "<leader>oc",
+      --   function()
+      --     return require("obsidian").util.toggle_checkbox()
+      --   end,
+      --   desc = "Interact Check",
+      --   buffer = true,
+      -- },
       -- Smart action depending on context, either follow link or toggle checkbox.
       {
         "<leader>oo",

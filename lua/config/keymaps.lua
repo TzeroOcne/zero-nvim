@@ -119,10 +119,21 @@ map({ "n", "v" }, "<leader>hh", "^", { desc = "Start of line" })
 map({ "n", "v" }, "<leader>hl", "$", { desc = "End of line" })
 
 -- Markdown actions
-map("x", "<leader>oc",
+map("v", "<leader>oc",
   "<Esc><cmd>silent '<,'>s/\\[\\([ x]\\)\\]/\\=submatch(1)==' ' ? '[x]' : '[ ]'/g | noh<CR>",
-  { silent = true }
+  { desc = 'Toggle Checkbox', silent = true }
 )
+map("n", "<leader>oc", function()
+  local row = vim.api.nvim_win_get_cursor(0)[1]
+  local line = vim.api.nvim_get_current_line()
+
+  line = line:gsub("%[([ x])%]", function(state)
+    return state == " " and "[x]" or "[ ]"
+  end)
+
+  vim.api.nvim_buf_set_lines(0, row - 1, row, false, { line })
+  vim.cmd("noh")
+end, { desc = "Toggle Checkbox", silent = true })
 
 -- Insert action
 map({ "n", "v" }, "<leader>io", "i<cr><esc>O", { desc = "End of line" })
