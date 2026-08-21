@@ -166,3 +166,42 @@ vim.api.nvim_create_autocmd({ "BufReadPre", "BufEnter", "BufWinEnter", "FileRead
     end
   end,
 })
+
+-- Detach ESLint from terminal buffers and clear stale diagnostics
+local function detach_eslint_from_term(buf)
+  if vim.bo[buf].buftype ~= "terminal" then
+    return
+  end
+  for _, client in pairs(vim.lsp.get_clients({ bufnr = buf })) do
+    if client.name == "eslint" then
+      vim.lsp.buf_detach_client(buf, client.id)
+    end
+  end
+  vim.diagnostic.reset(nil, buf)
+end
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+    if not client or client.name ~= "eslint" then
+      return
+    end
+
+    if vim.bo[args.buf].buftype == "terminal" then
+      vim.schedule(function()
+        detach_eslint_from_term(args.buf)
+      end)
+    end
+  end,
+})
+
+-- Clean up ESLint from terminal buffers on startup
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      detach_eslint_from_term(buf)
+    end
+  end,
+  once = true,
+})
