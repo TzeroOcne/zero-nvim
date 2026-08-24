@@ -174,6 +174,11 @@ function M.is_obsidian_project()
   return vim.fn.isdirectory(cwd .. "/.obsidian") == 1
 end
 
+function M.is_nvim_config()
+  local cwd = vim.fn.getcwd()
+  return vim.fn.fnamemodify(cwd, ":p") == vim.fn.fnamemodify(vim.fn.stdpath("config"), ":p")
+end
+
 function M.enable_blink()
   return true
     -- and not M.is_obsidian_project()

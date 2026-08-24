@@ -1,6 +1,10 @@
+---@module 'obsidian'
 return {
   "obsidian-nvim/obsidian.nvim",
-  enabled = require('zero').is_obsidian_project(),
+  enabled = function()
+    local zero = require('zero')
+    return zero.is_obsidian_project() or zero.is_nvim_config()
+  end,
   -- enabled = false,
   -- commit = "3c967d0",
   -- tag = "~v3.14.7",
@@ -56,6 +60,7 @@ return {
   opts = function ()
     vim.o.conceallevel = 1
 
+    ---@type obsidian.config
     return {
       legacy_commands = false,
       workspaces = {
@@ -70,6 +75,10 @@ return {
       },
       frontmatter = {
         enabled = false,
+      },
+      ---@diagnostic disable-next-line: missing-fields
+      ui = {
+        enable = false
       },
 
       -- Optional, completion of wiki links, local markdown links, and tags using nvim-cmp.
